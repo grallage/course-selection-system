@@ -24,4 +24,6 @@ yarn-error.log*
 
 # python env
 /env
-/backend
+__pycache__/
+migrations/
+db.sqlite3
