@@ -1,3 +1,11 @@
-body {
-  height: 200vh;
+body #root {
+  /* height: 200vh; */
+  display: flex;
+  /* flex-wrap: wrap; */
+}
+
+main {
+  /* display: flex; */
+  /* flex-shrink: 1; */
+  width: 100%;
 }

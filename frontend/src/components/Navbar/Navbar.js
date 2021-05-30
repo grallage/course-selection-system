@@ -24,8 +24,10 @@ import {
   ToolbarRightMobile,
   NavbarContainer,
 } from "./NavbarElements";
+import { EmptyToolbar } from "../Toolbar/ToolbarElements";
 
 const Navbar = () => {
+  const user = useSelector((state) => state.user.user);
   const sidebar = useSelector((state) => state.sidebar);
   const dispatch = useDispatch();
 
@@ -83,14 +85,22 @@ const Navbar = () => {
   return (
     <>
       <NavbarContainer position="fixed" showsidebar={sidebar.display ? 1 : 0}>
-        <Toolbar>
+        {/* <Toolbar> */}
+        <EmptyToolbar>
           {!sidebar.display && (
             <ToolbarLeft onClick={handleSidebar}>
               <MenuIcon />
             </ToolbarLeft>
           )}
 
-          <ToolbarTitle>学生选课系统</ToolbarTitle>
+          <ToolbarTitle>
+            学生选课系统 -
+            {user.is_admin
+              ? " 管理员后台"
+              : user.is_teacher
+              ? " 教师后台"
+              : " 学生后台"}
+          </ToolbarTitle>
           <ToolbarMiddle />
 
           <ToolbarRightPC>
@@ -104,7 +114,8 @@ const Navbar = () => {
               <MoreIcon />
             </IconButton>
           </ToolbarRightMobile>
-        </Toolbar>
+          {/* </Toolbar> */}
+        </EmptyToolbar>
       </NavbarContainer>
       {profileMenu}
       {mobileMoreMenu}

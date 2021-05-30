@@ -1,7 +1,6 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
 
 import List from "@material-ui/core/List";
 
@@ -13,19 +12,16 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
+import Icon from "@material-ui/core/Icon";
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import { Hidden as hiddenSidebar } from "../../redux/actions/sidebarAction";
-import {
-  SidebarContainer,
-  SidebarToolbar,
-  SidebarWrapper,
-} from "./SidebarElements";
+import { SidebarLink, SidebarWrapper } from "./SidebarElements";
 
-import dataList from "./data";
+import { teacherLinks, studentLinks, admininks } from "./data";
+import { EmptyToolbar } from "../Toolbar/ToolbarElements";
+import { CommonLink } from "../commom/CommonElements";
 
 const drawerWidth = 240;
 
@@ -33,34 +29,46 @@ export default function Sidebar() {
   const sidebar = useSelector((state) => state.sidebar);
   const dispatch = useDispatch();
   const theme = useTheme();
+  const user = useSelector((state) => state.user.user);
+  const dataList = user.is_admin
+    ? admininks
+    : user.is_teacher
+    ? teacherLinks
+    : user.is_student
+    ? studentLinks
+    : [];
 
   const handleHiddenSidebar = () => {
     dispatch(hiddenSidebar());
   };
 
   return (
-    <SidebarContainer>
-      <SidebarWrapper showsidebar={sidebar.display ? 1 : 0}>
-        <SidebarToolbar>
-          <IconButton onClick={handleHiddenSidebar}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </SidebarToolbar>
+    <SidebarWrapper showsidebar={sidebar.display ? 1 : 0}>
+      <EmptyToolbar>
+        <IconButton onClick={handleHiddenSidebar}>
+          {theme.direction === "rtl" ? (
+            <ChevronRightIcon />
+          ) : (
+            <ChevronLeftIcon />
+          )}
+        </IconButton>
+      </EmptyToolbar>
 
-        <Divider />
-        <List>
-          {dataList.map((data, index) => (
-            <ListItem button key={data.name}>
-              <ListItemIcon>{data.icon}</ListItemIcon>
+      <Divider />
+      <List>
+        {dataList.map((data, index) => (
+          <CommonLink to={data.url} key={data.name}>
+            <ListItem button>
+              <ListItemIcon>
+                {/* <IconButton>
+                  </IconButton> */}
+                <Icon>{data.icon}</Icon>
+              </ListItemIcon>
               <ListItemText primary={data.name} />
             </ListItem>
-          ))}
-        </List>
-      </SidebarWrapper>
-    </SidebarContainer>
+          </CommonLink>
+        ))}
+      </List>
+    </SidebarWrapper>
   );
 }

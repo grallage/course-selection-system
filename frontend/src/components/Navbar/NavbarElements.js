@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components/macro";
 
 import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
@@ -46,7 +46,7 @@ export const ToolbarRightPC = styled.div`
 
 export const ToolbarRightMobile = styled.div`
   ${({ theme }) => `
-  display: flex;  
+  display: flex;
   @media screen and (min-width: ${theme.breakpoints.values.md}px) {
     display: none;
   }
