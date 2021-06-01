@@ -1,25 +1,28 @@
 import React from "react";
-import { EmptyToolbar } from "../../../components/Toolbar/ToolbarElements";
+
 import ClassForm from "./components/ClassForm";
-import { Main, PageContainer } from "../../../components/commom/CommonElements";
-import Grid from "@material-ui/core/Grid";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  GridContainer,
+  PageContainer,
+} from "../../../components/commom/CommonElements";
+
+import { Switch, Route } from "react-router-dom";
+import ClassList from "./components/ClassList";
 
 function ClassPage() {
   return (
     <main>
-      <EmptyToolbar />
+      <PageContainer maxWidth="lg">
+        <GridContainer>
+          <Switch>
+            <Route
+              path="/class/create"
+              render={() => <ClassForm type="create" />}
+            />
 
-      <PageContainer maxWidth="xl">
-        {/* <MainContainer maxWidth="lg"> */}
-        <Grid container spacing={3}>
-          <Router>
-            <Switch>
-              <Route exact path="/class/create" component={ClassForm} />
-              {/* <Route component={<>班级管理页</>} /> */}
-            </Switch>
-          </Router>
-        </Grid>
+            <Route path="/class" component={ClassList} />
+          </Switch>
+        </GridContainer>
       </PageContainer>
     </main>
   );

@@ -5,9 +5,8 @@ import {
   GridContainer,
 } from "../../../components/commom/CommonElements";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import MajorForm from "./components/MajorForm";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import MajorList from "./components/MajorList";
 
 function MajorPage() {

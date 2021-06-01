@@ -1,29 +1,23 @@
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useSnackbar } from "notistack";
+import queryString from "query-string";
 
 import React, { useState, useEffect } from "react";
-
-import queryString from "query-string";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Switch from "@material-ui/core/Switch";
-
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 
-import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { SwitchLabel } from "./MajorFormElements";
-
 import { ButtonGroup } from "@material-ui/core";
 
+import { SwitchLabel } from "./MajorFormElements";
+
 export default function MajorForm({ type }) {
-  // const classes = useStyles();
-  const dispatch = useDispatch();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   let history = useHistory();
   let location = useLocation();
   const { id } = useParams();
@@ -54,12 +48,13 @@ export default function MajorForm({ type }) {
   };
 
   const handleSubmitAndReturnToListPage = (event) => {
-    const result = handleSubmit(event);
-    console.log("result:");
-    console.log(result);
-    if (result) {
-      history.push("/major");
-    }
+    handleSubmit(event).then((result) => {
+      if (result) {
+        console.log("result:");
+        console.log(result);
+        history.push("/major");
+      }
+    });
   };
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -80,43 +75,44 @@ export default function MajorForm({ type }) {
 
     var csrfCookie = Cookies.get("csrftoken");
     // console.log(csrfCookie);
-    return (
-      axios({
-        method: type === "create" ? "post" : "put",
-        url: url,
-        data: form,
-        header: {
-          "Content-Type": "application/json",
-        },
+    return axios({
+      method: type === "create" ? "post" : "put",
+      url: url,
+      data: form,
+      header: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        return response.data;
       })
-        // return axios
-        //   .post(url, form, {
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //   })
-        .then((response) => {
-          console.log(response);
-          return response.data;
-        })
-        .then((json) => {
-          console.log(json);
-          if (type === "create") {
-            setDescription("");
-            setName("");
-            setIsActive(true);
-          } else {
-            getMajor();
-          }
+      .then((json) => {
+        console.log(json);
+        if (type === "create") {
+          setDescription("");
+          setName("");
+          setIsActive(true);
+          enqueueSnackbar("创建成功", {
+            variant: "success",
+          });
+        } else {
+          getMajor();
+          enqueueSnackbar("编辑成功", {
+            variant: "success",
+          });
+        }
 
-          return true;
-        })
-        .catch((error) => {
-          console.log("錯誤");
-          console.log(error);
-          return false;
-        })
-    );
+        return true;
+      })
+      .catch((error) => {
+        console.log("錯誤");
+        console.log(error);
+        enqueueSnackbar("操作失败", {
+          variant: "error",
+        });
+        return false;
+      });
   };
 
   const getMajor = () => {
@@ -147,13 +143,11 @@ export default function MajorForm({ type }) {
 
   return (
     <>
-      {/* <form className={classes.root} noValidate autoComplete="off"> */}
       <Grid item xs={12}>
         <Typography variant="h6" gutterBottom>
           创建专业
         </Typography>
       </Grid>
-      {/* <Grid container spacing={3}> */}
 
       <Grid item xs={12}>
         <TextField

@@ -31,29 +31,24 @@ import {
   MainSearchForm,
   TableWapper,
 } from "../../../../components/commom/CommonElements";
-import MajorDeleteAlert from "./MajorDeleteAlert";
+import ClassDeleteAlert from "./ClassDeleteAlert";
 import { useDialog } from "../../../../providers/DialogProvider";
 
-function createData({
-  id,
-  name,
-  description,
-  is_active,
-  created_at,
-  modified_at,
-}) {
-  return { id, name, description, is_active, created_at, modified_at };
+function createData({ id, name, year, created_at, modified_at, major }) {
+  return { id, name, year, created_at, modified_at, major };
 }
 
-const MajorList = () => {
+const ClassList = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [name, setName] = React.useState("");
-  const [desc, setDesc] = React.useState("");
+  const [majorName, setMajorName] = React.useState("");
+
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
   const [count, setCount] = React.useState(0);
-  const [majors, setMajors] = React.useState([]);
+  const [classList, setClassList] = React.useState([]);
+
   const location = useLocation();
   // const [openDialog, closeDialog] = useDialog();
   const { createDialog, closeDialog } = useDialog();
@@ -65,33 +60,34 @@ const MajorList = () => {
 
   useEffect(() => {
     const parsed = queryString.parse(location.search);
-    setDesc(parsed.desc ? String(parsed.desc) : "");
     setName(parsed.name ? String(parsed.name) : "");
-    getMajorList();
+    getClassList();
   }, [page, pageSize]);
 
   useEffect(() => {
-    getMajorList();
-  }, [name, desc]);
+    getClassList();
+  }, [name, majorName]);
 
   const handleChange = (event) => {
     if (event.target.name === "name") {
       setName(event.target.value);
     }
-    if (event.target.name === "desc") {
-      setDesc(event.target.value);
+    if (event.target.name === "majorName") {
+      setMajorName(event.target.value);
     }
   };
 
-  const openDeleteDialog = (major) => {
+  const openDeleteDialog = (classInfo) => {
     createDialog({
-      children: <MajorDeleteAlert handleDelete={handleDelete} major={major} />,
+      children: (
+        <ClassDeleteAlert handleDelete={handleDelete} classInfo={classInfo} />
+      ),
     });
   };
 
   const handleDelete = (major) => {
     const id = major.id;
-    let url = `${process.env.REACT_APP_MAJOR_API}${id}/`;
+    let url = `${process.env.REACT_APP_CLASS_API}${id}/`;
     console.log(url);
     axios
       .delete(url, {
@@ -106,7 +102,7 @@ const MajorList = () => {
         enqueueSnackbar("删除成功", {
           variant: "success",
         });
-        getMajorList();
+        getClassList();
       })
       .catch((error) => {
         console.log("錯誤");
@@ -117,12 +113,12 @@ const MajorList = () => {
       });
   };
 
-  const getMajorList = (event) => {
+  const getClassList = (event) => {
     if (event) {
       event.preventDefault();
     }
     console.log(page);
-    let url = process.env.REACT_APP_MAJOR_API;
+    let url = process.env.REACT_APP_CLASS_API;
 
     axios.defaults.xsrfCookieName = "csrftoken";
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -136,7 +132,7 @@ const MajorList = () => {
         {
           params: {
             name: name,
-            description: desc,
+            major_name: majorName,
             page: page + 1,
             page_size: pageSize,
             ordering: "-id",
@@ -155,11 +151,10 @@ const MajorList = () => {
       .then((json) => {
         console.log(json);
         setCount(json.count);
-        // console.log(json.count);
-        // console.log(count);
+
         const data = json.results.map((item) => createData(item));
-        // console.log(data);
-        setMajors(data);
+
+        setClassList(data);
       })
       .catch((error) => {
         console.log("錯誤");
@@ -173,7 +168,7 @@ const MajorList = () => {
         {/* <Paper component="form"> */}
         <MainSearchForm>
           <TextField
-            label="专业名词"
+            label="班级名称"
             name="name"
             onChange={handleChange}
             value={name}
@@ -182,16 +177,16 @@ const MajorList = () => {
             }}
           />
           <TextField
-            label="专业描述"
-            name="desc"
+            label="主修专业"
+            name="majorName"
             onChange={handleChange}
-            value={desc}
+            value={majorName}
           />
 
-          <IconButton type="button" aria-label="search" onClick={getMajorList}>
+          <IconButton type="button" aria-label="search" onClick={getClassList}>
             <SearchIcon />
           </IconButton>
-          <CommonLink to="/major/create">
+          <CommonLink to="/class/create">
             <IconButton type="button" aria-label="create">
               <AddCircleOutlineIcon />
             </IconButton>
@@ -206,23 +201,19 @@ const MajorList = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>编号</TableCell>
-                  <TableCell>名字</TableCell>
-                  <TableCell>描述</TableCell>
-                  <TableCell>是否激活</TableCell>
+                  <TableCell>班级名称</TableCell>
+                  <TableCell>主修专业</TableCell>
                   <TableCell>创建日期</TableCell>
                   <TableCell>修改日期</TableCell>
                   <TableCell align="right">操作</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {majors.map((row) => (
+                {classList.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell>{row.id}</TableCell>
                     <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>
-                      {row.is_active ? <FcCheckmark /> : <FcCancel />}
-                    </TableCell>
+                    <TableCell>{row.major.name}</TableCell>
                     <TableCell>
                       <Moment format="YYYY/MM/DD HH:mm:ss">
                         {row.created_at}
@@ -238,16 +229,14 @@ const MajorList = () => {
                         color="primary"
                         aria-label="outlined primary button group"
                       >
-                        <LinkWrapper>
-                          <CommonLink to={`/major/edit/${row.id}/`}>
-                            {/* <CommonLink to={`/major/edit/${row.id}/`}> */}
+                        {/* <LinkWrapper>
+                          <CommonLink to={`/class/edit/${row.id}/`}>
                             <Icon>
                               <AiFillEdit />
                             </Icon>
-                            {/* </CommonLink> */}
                           </CommonLink>
-                        </LinkWrapper>
-                        {/* <LinkWrapper onClick={() => handleDelete(row.id)}> */}
+                        </LinkWrapper> */}
+
                         <LinkWrapper onClick={() => openDeleteDialog(row)}>
                           <Link variant="button">
                             <Icon>
@@ -286,4 +275,4 @@ const MajorList = () => {
   );
 };
 
-export default MajorList;
+export default ClassList;

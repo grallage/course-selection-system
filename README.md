@@ -26,4 +26,8 @@ yarn add react-redux
 yarn add redux-devtools-extension
 yarn add styled-components
 yarn add styled-components.macro -dev
+yarn add notistack
+yarn add @material-ui/pickers
+# yarn add @date-io/date-fns
+yarn add @date-io/date-fns@1.x date-fns
 ```

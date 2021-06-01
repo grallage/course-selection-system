@@ -7,10 +7,12 @@ import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "styled-components";
 import { MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
+import { SnackbarProvider } from "notistack";
 
 // redux
 import { Provider } from "react-redux";
 import store from "./store";
+import DialogProvider from "./providers/DialogProvider";
 
 const theme = createMuiTheme();
 
@@ -25,7 +27,16 @@ ReactDOM.render(
         <ThemeProvider theme={theme}>
           {/* //Include your app and you have acces to everything */}
           <Provider store={store}>
-            <App />
+            <SnackbarProvider
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              <DialogProvider>
+                <App />
+              </DialogProvider>
+            </SnackbarProvider>
           </Provider>
         </ThemeProvider>
       </MuiThemeProvider>

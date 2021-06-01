@@ -22,6 +22,8 @@ import StudentPage from "./pages/admin/student/StudentPage";
 import MajorPage from "./pages/admin/major/MajorPage";
 import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
 import { MainContainer } from "./components/commom/CommonElements";
+import Notification from "./components/Notification/Notification";
+import AlertDialog from "./components/Alerts/Alerts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +41,7 @@ function App() {
   const UserPages = () => (
     <>
       <Router>
+        {/* <AlertDialog /> */}
         <Navbar />
         <Sidebar />
         <MainContainer>
@@ -75,6 +78,7 @@ function App() {
     // <div className={classes.root}>
     <>
       <Router>
+        <Notification />
         <Switch>
           <Route exact path="/sign-in" component={signin} />
           <Route exact path="/sign-up" component={signup} />
