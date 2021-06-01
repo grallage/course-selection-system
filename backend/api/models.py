@@ -67,7 +67,7 @@ class User(AbstractBaseUser):
 
 
 class Major(models.Model):
-    name = models.CharField(_("主修专业"), default="", max_length=32)
+    name = models.CharField(_("主修专业"), default="", max_length=32, unique=True)
     description = models.TextField(_("主修专业描述"), blank=True, default="")
     is_active = models.BooleanField(_("是否激活"), default=True)
     created_at = models.DateTimeField(_("创建时间"), auto_now_add=True)
@@ -84,7 +84,7 @@ class Major(models.Model):
 class ClassInfo(models.Model):
     year = models.DateField(_("班级创建年份"))
     major = models.ForeignKey(Major, on_delete=models.CASCADE)
-    name = models.CharField(_("班级名称"), default="", max_length=64)
+    name = models.CharField(_("班级名称"), default="", max_length=64, unique=True)
     created_at = models.DateTimeField(_("創建時間"), auto_now_add=True)
     modified_at = models.DateTimeField(_("修改時間"), auto_now=True)
 
@@ -94,6 +94,7 @@ class ClassInfo(models.Model):
     class Meta:
         db_table = "class_info"
         ordering = ["-year", "-major"]
+        # unique_together = ("year", "major",'name')
 
 
 class Student(models.Model):

@@ -51,9 +51,18 @@ class MajorSerializer(serializers.ModelSerializer):
 
 
 class ClassInfoSerializer(serializers.ModelSerializer):
+    # major = serializers.ReadOnlyField(source="major.name")
+    major = MajorSerializer(read_only=True)
+
     class Meta:
         model = models.ClassInfo
         fields = "__all__"
+
+
+class ClassInfoCreateSerializer(serializers.Serializer):
+    classCount = serializers.IntegerField()
+    year = serializers.DateTimeField()
+    majorId = serializers.IntegerField()
 
 
 class StudentSerializer(serializers.ModelSerializer):
