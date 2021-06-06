@@ -87,6 +87,15 @@ class StudentViewSet(viewsets.ModelViewSet):
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = models.Teacher.objects.all()
     serializer_class = serializers.TeacherSerializer
+    filterset_class = filters.TeacherFilterSet
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    ordering_fields = "__all__"
+
+    def get_serializer_class(self):
+        if self.action == "update":
+            return serializers.TeacherEditSerializer
+
+        return serializers.TeacherSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):

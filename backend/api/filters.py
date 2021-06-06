@@ -20,3 +20,11 @@ class ClassInfoFilterSet(filters.FilterSet):
     class Meta:
         model = models.ClassInfo
         fields = ["name", "major_name"]
+
+
+class TeacherFilterSet(filters.FilterSet):
+    full_name = filters.CharFilter(field_name="user__full_name", lookup_expr="contains")
+
+    class Meta:
+        model = models.Teacher
+        fields = ["full_name"]

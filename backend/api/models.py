@@ -62,6 +62,7 @@ class User(AbstractBaseUser):
         return self.full_name
 
     class Meta:
+        verbose_name = "用户"
         ordering = ["-created_at"]
         db_table = "user"
 
@@ -117,10 +118,6 @@ class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     code = models.CharField(_("教师号码"), unique=True, max_length=16)
     domain = models.TextField(_("擅长领域"), blank=True, default="")
-    # class_location = models.CharField(
-    #     _("上課大樓地址"), max_length=256, default="", blank=True
-    # )
-    # class_room = models.CharField(_("上課課室號碼"), max_length=256, default="", blank=True)
     office = models.CharField(_("办公室"), blank=True, default="", max_length=100)
 
     def __str__(self):

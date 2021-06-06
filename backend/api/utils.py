@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 SEX_CHOICES = (
     ("SECRET", _("秘密")),
     ("MALE", _("男")),
-    ("FEMAIL", _("女")),
+    ("FEMALE", _("女")),
 )
 
 STATUS_CHOICES = (

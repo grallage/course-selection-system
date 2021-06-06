@@ -1,8 +1,8 @@
 const data = {
   "": "首页",
   major: "专业",
-  student: "教师",
-  teacher: "学生",
+  student: "学生",
+  teacher: "教师",
   class: "班级",
   //
   create: "添加",
