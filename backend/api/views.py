@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from rest_framework import viewsets, permissions, urls, status
 from rest_framework.filters import OrderingFilter
+from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 
 from . import serializers, models, filters
@@ -82,6 +83,14 @@ class ClassInfoViewSet(viewsets.ModelViewSet):
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = models.Student.objects.all()
     serializer_class = serializers.StudentSerializer
+    filterset_class = filters.StudentFilterSet
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    ordering_fields = "__all__"
+
+    def get_serializer_class(self):
+        if self.action == "update":
+            return serializers.StudentEditSerializer
+        return serializers.StudentSerializer
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
@@ -94,7 +103,6 @@ class TeacherViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "update":
             return serializers.TeacherEditSerializer
-
         return serializers.TeacherSerializer
 
 
@@ -111,3 +119,9 @@ class CourseScheduleViewSet(viewsets.ModelViewSet):
 class StudentCourseViewSet(viewsets.ModelViewSet):
     queryset = models.StudentCourse.objects.all()
     serializer_class = serializers.StudentCourseSerializer
+
+
+class PasswordView(UpdateAPIView):
+    serializer_class = serializers.PasswordSerializer
+    model = models.User
+    queryset = models.User.objects.all()

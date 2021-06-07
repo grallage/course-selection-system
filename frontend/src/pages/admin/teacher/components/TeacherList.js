@@ -18,14 +18,12 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import { ButtonGroup, Button } from "@material-ui/core";
+import { ButtonGroup } from "@material-ui/core";
 import Icon from "@material-ui/core/Icon";
 
 import { AiFillEdit, AiFillDelete, AiFillInfoCircle } from "react-icons/ai";
-import { FcCheckmark, FcCancel } from "react-icons/fc";
 
 import {
-  CommonLink,
   LinkWrapper,
   MainSearchForm,
   TableWapper,
@@ -139,7 +137,7 @@ const TeacherList = () => {
     if (event) {
       event.preventDefault();
     }
-    console.log(page);
+
     let url = process.env.REACT_APP_TEACHER_API;
 
     axios.defaults.xsrfCookieName = "csrftoken";
@@ -167,13 +165,10 @@ const TeacherList = () => {
         }
       )
       .then((response) => {
-        // console.log(response);
         return response.data;
       })
       .then((json) => {
-        console.log(json);
         setCount(json.count);
-
         const data = json.results.map((item) => createData(item));
         // console.log(data);
         setTeachers(data);

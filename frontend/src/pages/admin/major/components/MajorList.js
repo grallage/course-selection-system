@@ -121,7 +121,7 @@ const MajorList = () => {
     if (event) {
       event.preventDefault();
     }
-    console.log(page);
+
     let url = process.env.REACT_APP_MAJOR_API;
 
     axios.defaults.xsrfCookieName = "csrftoken";
@@ -153,12 +153,8 @@ const MajorList = () => {
         return response.data;
       })
       .then((json) => {
-        console.log(json);
         setCount(json.count);
-        // console.log(json.count);
-        // console.log(count);
         const data = json.results.map((item) => createData(item));
-        // console.log(data);
         setMajors(data);
       })
       .catch((error) => {

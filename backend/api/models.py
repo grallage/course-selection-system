@@ -94,6 +94,7 @@ class ClassInfo(models.Model):
 
     class Meta:
         db_table = "class_info"
+        verbose_name = "班级"
         ordering = ["-year", "-major"]
         # unique_together = ("year", "major",'name')
 
@@ -101,7 +102,9 @@ class ClassInfo(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     code = models.CharField(_("学号"), unique=True, max_length=16)
-    class_info = models.ForeignKey(ClassInfo, on_delete=models.CASCADE)
+    class_info = models.ForeignKey(
+        ClassInfo, on_delete=models.CASCADE, related_name="students"
+    )
 
     def __str__(self):
         return self.user.full_name

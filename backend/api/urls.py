@@ -16,4 +16,5 @@ router.register(r"student-course", views.StudentCourseViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("password/<int:pk>/", views.PasswordView.as_view(), name="change_password"),
 ]

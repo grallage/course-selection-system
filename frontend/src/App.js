@@ -24,6 +24,7 @@ import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
 import { MainContainer } from "./components/commom/CommonElements";
 import Notification from "./components/Notification/Notification";
 import AlertDialog from "./components/Alerts/Alerts";
+import PasswordPage from "./pages/admin/password/PasswordPage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,6 +67,7 @@ function App() {
                 <Route path="/class" component={ClassPage} />
                 <Route path="/teacher" component={TeacherPage} />
                 <Route path="/student" component={StudentPage} />
+                <Route exact path="/password" component={PasswordPage} />
               </>
             )}
           </Switch>

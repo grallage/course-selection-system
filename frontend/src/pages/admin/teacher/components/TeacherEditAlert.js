@@ -139,7 +139,7 @@ function TeacherEditAlert({ teacher, type, getTeacherList }) {
                 onChange={handleInputValue}
               >
                 <FormControlLabel
-                  value="FEMAIL"
+                  value="FEMALE"
                   control={<Radio />}
                   label="女"
                 />

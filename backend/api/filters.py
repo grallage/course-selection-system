@@ -28,3 +28,14 @@ class TeacherFilterSet(filters.FilterSet):
     class Meta:
         model = models.Teacher
         fields = ["full_name"]
+
+
+class StudentFilterSet(filters.FilterSet):
+    full_name = filters.CharFilter(field_name="user__full_name", lookup_expr="contains")
+    class_name = filters.CharFilter(
+        field_name="class_info__name", lookup_expr="contains"
+    )
+
+    class Meta:
+        model = models.Student
+        fields = ["full_name", "class_name"]

@@ -5,7 +5,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  DialogContentText,
   TextField,
   Card,
   Grid,
@@ -13,11 +12,7 @@ import {
 import { useDialog } from "../../../../providers/DialogProvider";
 
 function TeacherInfoAlert({ teacher }) {
-  const { createDialog, closeDialog } = useDialog();
-
-  const handleSubmit = () => {
-    closeDialog();
-  };
+  const { closeDialog } = useDialog();
 
   return (
     <Card>
@@ -125,14 +120,7 @@ function TeacherInfoAlert({ teacher }) {
           </Grid>
         </Grid>
       </DialogContent>
-      {/* <TextField
-        autoFocus
-        margin="dense"
-        value={teacher.user.full_name}
-        label="名称"
-        type="text"
-        fullWidth
-      /> */}
+
       <DialogActions>
         <Button color="primary" onClick={() => closeDialog()}>
           关闭

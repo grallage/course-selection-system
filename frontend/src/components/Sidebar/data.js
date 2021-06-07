@@ -4,6 +4,7 @@ import { GiTeacher } from "react-icons/gi";
 import { MdPeople } from "react-icons/md";
 import { SiGoogleclassroom } from "react-icons/si";
 import { IoSchoolOutline } from "react-icons/io5";
+import { RiLockPasswordFill } from "react-icons/ri";
 
 export const teacherLinks = [
   {
@@ -79,5 +80,10 @@ export const admininks = [
     name: "学生",
     url: "/student",
     icon: <MdPeople />,
+  },
+  {
+    name: "密码",
+    url: "/password",
+    icon: <RiLockPasswordFill />,
   },
 ];

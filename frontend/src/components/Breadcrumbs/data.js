@@ -4,6 +4,7 @@ const data = {
   student: "学生",
   teacher: "教师",
   class: "班级",
+  password: "更改密码",
   //
   create: "添加",
   edit: "编辑",

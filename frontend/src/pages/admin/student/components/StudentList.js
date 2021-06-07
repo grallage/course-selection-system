@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
+
 import { useSnackbar } from "notistack";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
-import Moment from "react-moment";
 
 import Link from "@material-ui/core/Link";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -19,11 +18,10 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import { ButtonGroup, Button } from "@material-ui/core";
+import { ButtonGroup } from "@material-ui/core";
 import Icon from "@material-ui/core/Icon";
 
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import { FcCheckmark, FcCancel } from "react-icons/fc";
+import { AiFillEdit, AiFillDelete, AiFillInfoCircle } from "react-icons/ai";
 
 import {
   CommonLink,
@@ -31,26 +29,29 @@ import {
   MainSearchForm,
   TableWapper,
 } from "../../../../components/commom/CommonElements";
-import ClassDeleteAlert from "./ClassDeleteAlert";
+import StudentDeleteAlert from "./StudentDeleteAlert";
 import { useDialog } from "../../../../providers/DialogProvider";
 
-function createData({ id, name, year, created_at, modified_at, major }) {
-  return { id, name, year, created_at, modified_at, major };
+function createData({ user, code, class_info }) {
+  return { user, code, class_info };
 }
 
-const ClassList = () => {
+const initialSearchForm = {
+  name: "",
+  phone: "",
+};
+
+const StudentList = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [name, setName] = React.useState("");
-  const [majorName, setMajorName] = React.useState("");
+  const [searchForm, setSearchForm] = React.useState(initialSearchForm);
 
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
   const [count, setCount] = React.useState(0);
-  const [classList, setClassList] = React.useState([]);
-
+  const [students, setStudents] = React.useState([]);
   const location = useLocation();
-  // const [openDialog, closeDialog] = useDialog();
+
   const { createDialog, closeDialog } = useDialog();
 
   const handleChangeRowsPerPage = (event) => {
@@ -60,35 +61,30 @@ const ClassList = () => {
 
   useEffect(() => {
     const parsed = queryString.parse(location.search);
-    setName(parsed.name ? String(parsed.name) : "");
-    getClassList();
+    getStudentList();
   }, [page, pageSize]);
 
   useEffect(() => {
-    getClassList();
-  }, [name, majorName]);
+    getStudentList();
+  }, [searchForm]);
 
   const handleChange = (event) => {
-    if (event.target.name === "name") {
-      setName(event.target.value);
-    }
-    if (event.target.name === "majorName") {
-      setMajorName(event.target.value);
-    }
+    const { name, value, checked } = event.target;
+    setSearchForm({ [name]: value });
   };
 
-  const openDeleteDialog = (classInfo) => {
+  const openDeleteDialog = (student) => {
     createDialog({
       children: (
-        <ClassDeleteAlert handleDelete={handleDelete} classInfo={classInfo} />
+        <StudentDeleteAlert handleDelete={handleDelete} student={student} />
       ),
     });
   };
 
-  const handleDelete = (major) => {
-    const id = major.id;
-    let url = `${process.env.REACT_APP_CLASS_API}${id}/`;
-    console.log(url);
+  const handleDelete = (student) => {
+    const id = student.user.id;
+    let url = `${process.env.REACT_APP_STUDENT_API}${id}/`;
+
     axios
       .delete(url, {
         headers: {
@@ -102,7 +98,7 @@ const ClassList = () => {
         enqueueSnackbar("删除成功", {
           variant: "success",
         });
-        getClassList();
+        getStudentList();
       })
       .catch((error) => {
         console.log("錯誤");
@@ -113,12 +109,12 @@ const ClassList = () => {
       });
   };
 
-  const getClassList = (event) => {
+  const getStudentList = (event) => {
     if (event) {
       event.preventDefault();
     }
 
-    let url = process.env.REACT_APP_CLASS_API;
+    let url = process.env.REACT_APP_STUDENT_API;
 
     axios.defaults.xsrfCookieName = "csrftoken";
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -131,8 +127,8 @@ const ClassList = () => {
         url,
         {
           params: {
-            name: name,
-            major_name: majorName,
+            full_name: searchForm.full_name,
+            class_name: searchForm.class_name,
             page: page + 1,
             page_size: pageSize,
             ordering: "-id",
@@ -151,7 +147,8 @@ const ClassList = () => {
       .then((json) => {
         setCount(json.count);
         const data = json.results.map((item) => createData(item));
-        setClassList(data);
+        // console.log(data);
+        setStudents(data);
       })
       .catch((error) => {
         console.log("錯誤");
@@ -165,25 +162,32 @@ const ClassList = () => {
         {/* <Paper component="form"> */}
         <MainSearchForm>
           <TextField
-            label="班级名称"
-            name="name"
+            label="学生名称"
+            name="full_name"
             onChange={handleChange}
-            value={name}
+            value={searchForm.name}
             inputProps={{
               maxLength: 32,
             }}
           />
           <TextField
-            label="主修专业"
-            name="majorName"
+            label="班级名称"
+            name="class_name"
             onChange={handleChange}
-            value={majorName}
+            value={searchForm.class_name}
+            inputProps={{
+              maxLength: 32,
+            }}
           />
 
-          <IconButton type="button" aria-label="search" onClick={getClassList}>
+          <IconButton
+            type="button"
+            aria-label="search"
+            onClick={getStudentList}
+          >
             <SearchIcon />
           </IconButton>
-          <CommonLink to="/class/create">
+          <CommonLink to="/student/create">
             <IconButton type="button" aria-label="create">
               <AddCircleOutlineIcon />
             </IconButton>
@@ -198,42 +202,45 @@ const ClassList = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>编号</TableCell>
-                  <TableCell>班级名称</TableCell>
-                  <TableCell>主修专业</TableCell>
-                  <TableCell>创建日期</TableCell>
-                  <TableCell>修改日期</TableCell>
+                  <TableCell>名称</TableCell>
+                  <TableCell>性别</TableCell>
+                  <TableCell>联系电话</TableCell>
+                  <TableCell>班级</TableCell>
+
                   <TableCell align="right">操作</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {classList.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell>{row.id}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.major.name}</TableCell>
+                {students.map((row) => (
+                  <TableRow key={row.user.id}>
+                    <TableCell>{row.code}</TableCell>
+                    <TableCell>{row.user.full_name}</TableCell>
                     <TableCell>
-                      <Moment format="YYYY/MM/DD HH:mm:ss">
-                        {row.created_at}
-                      </Moment>
+                      {row.user.sex === "MALE"
+                        ? "男"
+                        : row.user.sex === "FEMALE"
+                        ? "女"
+                        : "未设定"}
                     </TableCell>
-                    <TableCell>
-                      <Moment format="YYYY/MM/DD HH:mm:ss">
-                        {row.modified_at}
-                      </Moment>
-                    </TableCell>
+                    <TableCell>{row.user.phone}</TableCell>
+                    <TableCell>{row.class_info.name}</TableCell>
+
                     <TableCell align="right">
                       <ButtonGroup
                         color="primary"
                         aria-label="outlined primary button group"
                       >
-                        {/* <LinkWrapper>
-                          <CommonLink to={`/class/edit/${row.id}/`}>
-                            <Icon>
-                              <AiFillEdit />
-                            </Icon>
+                        <LinkWrapper>
+                          <CommonLink to={`/student/edit/${row.user.id}/`}>
+                            <Link variant="button">
+                              <Icon>
+                                <AiFillEdit />
+                              </Icon>
+                            </Link>
                           </CommonLink>
-                        </LinkWrapper> */}
+                        </LinkWrapper>
 
+                        {/* <LinkWrapper onClick={() => handleDelete(row.id)}> */}
                         <LinkWrapper onClick={() => openDeleteDialog(row)}>
                           <Link variant="button">
                             <Icon>
@@ -272,4 +279,4 @@ const ClassList = () => {
   );
 };
 
-export default ClassList;
+export default StudentList;

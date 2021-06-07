@@ -13,9 +13,9 @@ const initialFormValues = {
   address: "",
   phone: "",
   is_active: true,
-  domain: "",
-  office: "",
   code: "",
+  classId: -1,
+  classes: [],
   // form status
   formSubmitted: false,
   success: false,
@@ -25,8 +25,8 @@ const initialFormValues = {
 const PostForm = async (values, successCallback, errorCallback) => {
   let url =
     values.formType === "create"
-      ? process.env.REACT_APP_TEACHER_API
-      : `${process.env.REACT_APP_TEACHER_API}${values.id}/`;
+      ? process.env.REACT_APP_STUDENT_API
+      : `${process.env.REACT_APP_STUDENT_API}${values.id}/`;
   let form = new FormData();
 
   form.append("user.full_name", values.full_name);
@@ -39,9 +39,8 @@ const PostForm = async (values, successCallback, errorCallback) => {
   form.append("user.address", values.address);
   form.append("user.phone", values.phone);
   form.append("user.is_active", values.is_active);
-
-  form.append("domain", values.domain);
-  form.append("office", values.office);
+  // form.append("class_info", values.classId);
+  form.append("classId", values.classId);
 
   axios.defaults.xsrfCookieName = "csrftoken";
   axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -72,9 +71,9 @@ const PostForm = async (values, successCallback, errorCallback) => {
     });
 };
 
-export const useFormControls = ({ closeDialog, getTeacherList }) => {
+export const useFormControls = () => {
   const [formValues, setFormValues] = React.useState(initialFormValues);
-  //   const [closeDialogFunction, setCloseDialogFunction] = React.useState();
+
   const [errors, setErrors] = React.useState({});
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -97,15 +96,7 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
     if ("phone" in fieldValues) {
       tempErrors.phone = fieldValues.phone ? "" : "请填写该字段";
     }
-    // if ("is_active" in fieldValues) {
-    //   tempErrors.is_active = fieldValues.is_active ? "" : "请填写该字段";
-    // }
-    if ("domain" in fieldValues) {
-      tempErrors.domain = fieldValues.domain ? "" : "请填写该字段";
-    }
-    if ("office" in fieldValues) {
-      tempErrors.office = fieldValues.office ? "" : "请填写该字段";
-    }
+
     if ("password" in fieldValues && formValues.formType === "create") {
       tempErrors.password = fieldValues.password ? "" : "请填写该字段";
     }
@@ -117,6 +108,7 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
   const handleInputValue = (e) => {
     const { name, value, checked } = e.target;
     const nameValue = name === "is_active" ? checked : value;
+    console.log(name, nameValue);
 
     setFormValues({
       ...formValues,
@@ -129,6 +121,7 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
     if (formValues.formType === "create") {
       setFormValues({
         ...initialFormValues,
+        classes: formValues.classes,
         formSubmitted: true,
         success: true,
       });
@@ -137,6 +130,7 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
       });
     } else {
       setFormValues({
+        ...formValues,
         formSubmitted: true,
         success: true,
       });
@@ -144,26 +138,16 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
         variant: "success",
       });
     }
-    closeDialog();
-    getTeacherList();
   };
   const handleError = (response) => {
     console.log("handleError:");
     console.log(response);
 
-    if (formValues.formType === "create") {
-      setFormValues({
-        ...initialFormValues,
-        formSubmitted: true,
-        success: false,
-      });
-    } else {
-      setFormValues({
-        ...formValues,
-        formSubmitted: true,
-        success: false,
-      });
-    }
+    setFormValues({
+      ...formValues,
+      formSubmitted: true,
+      success: false,
+    });
 
     if (response.data && response.data.user) {
       const msgList = Object.values(response.data.user);
@@ -185,14 +169,18 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
       (fieldValues.password || formValues.formType !== "create") &&
       fieldValues.email &&
       fieldValues.sex &&
-      fieldValues.address &&
       fieldValues.phone &&
-      //   fieldValues.is_active &&
-      fieldValues.domain &&
-      fieldValues.office &&
-      //   fieldValues.description &&
-      //   fieldValues.is_active &&
       Object.values(errors).every((x) => x === "");
+    console.log(
+      fieldValues.full_name &&
+        (fieldValues.password || formValues.formType !== "create") &&
+        fieldValues.email &&
+        fieldValues.sex &&
+        fieldValues.address &&
+        fieldValues.phone
+    );
+    console.log(formValues.formType);
+    console.log(errors);
     return isValid;
   };
 
