@@ -1,6 +1,5 @@
 import React from "react";
-import Cookies from "js-cookie";
-import axios from "axios";
+import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
 
 const initialFormValues = {
@@ -42,19 +41,10 @@ const PostForm = async (values, successCallback, errorCallback) => {
   // form.append("class_info", values.classId);
   form.append("classId", values.classId);
 
-  axios.defaults.xsrfCookieName = "csrftoken";
-  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-  axios.defaults.withCredentials = true;
-
-  var csrfCookie = Cookies.get("csrftoken");
-  // console.log(csrfCookie);
   return await axios({
     method: values.formType === "create" ? "post" : "put",
     url: url,
     data: form,
-    header: {
-      "Content-Type": "application/json",
-    },
   })
     .then((response) => {
       console.log(response);
@@ -73,7 +63,6 @@ const PostForm = async (values, successCallback, errorCallback) => {
 
 export const useFormControls = () => {
   const [formValues, setFormValues] = React.useState(initialFormValues);
-
   const [errors, setErrors] = React.useState({});
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -108,7 +97,6 @@ export const useFormControls = () => {
   const handleInputValue = (e) => {
     const { name, value, checked } = e.target;
     const nameValue = name === "is_active" ? checked : value;
-    console.log(name, nameValue);
 
     setFormValues({
       ...formValues,
@@ -140,9 +128,6 @@ export const useFormControls = () => {
     }
   };
   const handleError = (response) => {
-    console.log("handleError:");
-    console.log(response);
-
     setFormValues({
       ...formValues,
       formSubmitted: true,
@@ -155,6 +140,14 @@ export const useFormControls = () => {
         enqueueSnackbar(msg, {
           variant: "error",
         });
+      });
+    } else if (response.data && response.data.detail) {
+      let msg = "操作失败";
+      if (response && response.data && response.data.detail) {
+        msg = response.data.detail;
+      }
+      enqueueSnackbar(msg, {
+        variant: "error",
       });
     } else {
       enqueueSnackbar("操作失败", {
@@ -179,8 +172,7 @@ export const useFormControls = () => {
         fieldValues.address &&
         fieldValues.phone
     );
-    console.log(formValues.formType);
-    console.log(errors);
+
     return isValid;
   };
 
@@ -198,6 +190,5 @@ export const useFormControls = () => {
     handleInputValue,
     handleFormSubmit,
     formIsValid,
-    // setCloseDialogFunction,
   };
 };

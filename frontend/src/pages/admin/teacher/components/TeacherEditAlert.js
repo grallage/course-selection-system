@@ -32,7 +32,6 @@ function TeacherEditAlert({ teacher, type, getTeacherList }) {
 
   useEffect(() => {
     if (type === "edit") {
-      // console.log("编辑");
       let { id, full_name, email, sex, address, phone, is_active } =
         teacher.user;
       let { domain, office, code } = teacher;
@@ -58,7 +57,6 @@ function TeacherEditAlert({ teacher, type, getTeacherList }) {
     <Card>
       <DialogTitle>{type === "create" ? `创建教师` : `编辑教师`}</DialogTitle>
       <DialogContent>
-        {/* <DialogContentText>{teacher.user.full_name}教师信息</DialogContentText> */}
         <Grid
           container
           directio="row"

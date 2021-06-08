@@ -17,7 +17,7 @@ import { CommonLink } from "../commom/CommonElements";
 export default function Breadcrumbs() {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   let location = useLocation();
-  let history = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     let pathList = location.pathname.split("/");

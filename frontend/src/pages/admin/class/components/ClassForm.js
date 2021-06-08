@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios from "service/axiosConfig";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -18,6 +19,7 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { useFormControls } from "./ClassFormControls";
 
 export default function ClassForm() {
+  const { enqueueSnackbar } = useSnackbar();
   let history = useHistory();
   const {
     formValues,
@@ -55,16 +57,19 @@ export default function ClassForm() {
           get_all: true,
           is_active: true,
         },
-        headers: {
-          "Content-Type": "application/json",
-        },
       })
       .then((response) => {
         return response.data;
       })
       .catch((error) => {
-        console.log("錯誤");
-        console.log(error.response);
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
+          variant: "error",
+        });
         return [];
       });
   };
@@ -100,7 +105,6 @@ export default function ClassForm() {
       </Grid>
       <Grid item xs={12} md={6}>
         <FormControl variant="outlined" fullWidth>
-          {/* <FormControl fullWidth> */}
           <InputLabel required>专业</InputLabel>
           <Select
             required
@@ -120,7 +124,6 @@ export default function ClassForm() {
       </Grid>
       <Grid item xs={12} md={6}>
         <FormControl variant="outlined" fullWidth>
-          {/* <FormControl fullWidth> */}
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
               margin="normal"
@@ -157,8 +160,6 @@ export default function ClassForm() {
           </Button>
         </ButtonGroup>
       </Grid>
-      {/* </Grid> */}
-      {/* </form> */}
     </>
   );
 }

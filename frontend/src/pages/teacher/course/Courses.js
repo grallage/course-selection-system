@@ -13,12 +13,12 @@ export default function courses() {
       <PageContainer maxWidth="xl">
         {/* <MainContainer maxWidth="lg"> */}
         <Grid container spacing={3}>
-          <Router>
-            <Switch>
-              <Route path="/course/create" component={CourseAdd} />
-              <Route component={CourseList} />
-            </Switch>
-          </Router>
+          {/* <Router> */}
+          <Switch>
+            <Route path="/course/create" component={CourseAdd} />
+            <Route component={CourseList} />
+          </Switch>
+          {/* </Router> */}
         </Grid>
       </PageContainer>
     </Main>

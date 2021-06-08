@@ -1,6 +1,6 @@
 import React from "react";
-import Cookies from "js-cookie";
-import axios from "axios";
+
+import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
 
 const initialFormValues = {
@@ -26,19 +26,10 @@ const PostForm = async (values, successCallback, errorCallback) => {
   form.append("classCount", values.classCount);
   form.append("year", values.year.toISOString());
 
-  axios.defaults.xsrfCookieName = "csrftoken";
-  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-  axios.defaults.withCredentials = true;
-
-  var csrfCookie = Cookies.get("csrftoken");
-  // console.log(csrfCookie);
   return await axios({
     method: values.formType === "create" ? "post" : "put",
     url: url,
     data: form,
-    header: {
-      "Content-Type": "application/json",
-    },
   })
     .then((response) => {
       console.log(response);
@@ -119,18 +110,19 @@ export const useFormControls = () => {
     }
   };
   const handleError = (error) => {
-    console.log("handleError:");
-    console.log(error.response);
     setFormValues({
       ...initialFormValues,
       formSubmitted: true,
       success: false,
     });
     let msg = "操作失败";
-    if (error.response) {
-      msg = error.response.data.msg;
+    const response = error.response;
+    if (response && response.data && response.data.detail) {
+      msg = response.data.detail;
     }
-
+    if (response && response.data && response.data.msg) {
+      msg = response.data.msg;
+    }
     enqueueSnackbar(msg, {
       variant: "error",
     });

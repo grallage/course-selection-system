@@ -1,6 +1,5 @@
 import React from "react";
-import Cookies from "js-cookie";
-import axios from "axios";
+import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
 
 const initialFormValues = {
@@ -25,19 +24,10 @@ const PostForm = async (values, successCallback, errorCallback) => {
   form.append("description", values.description);
   form.append("is_active", values.is_active);
 
-  axios.defaults.xsrfCookieName = "csrftoken";
-  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-  axios.defaults.withCredentials = true;
-
-  var csrfCookie = Cookies.get("csrftoken");
-  // console.log(csrfCookie);
   return await axios({
     method: values.formType === "create" ? "post" : "put",
     url: url,
     data: form,
-    header: {
-      "Content-Type": "application/json",
-    },
   })
     .then((response) => {
       console.log(response);
@@ -57,7 +47,7 @@ const PostForm = async (values, successCallback, errorCallback) => {
 export const useFormControls = () => {
   const [formValues, setFormValues] = React.useState(initialFormValues);
   const [errors, setErrors] = React.useState({});
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const validate = (fieldValues = formValues) => {
     let tempErrors = { ...errors };
@@ -103,24 +93,23 @@ export const useFormControls = () => {
     }
   };
   const handleError = (response) => {
-    console.log("handleError:");
-    console.log(response);
     setFormValues({
       ...initialFormValues,
       formSubmitted: true,
       success: false,
     });
-    enqueueSnackbar("操作失败", {
+    let msg = "操作失败";
+    if (response && response.data && response.data.detail) {
+      msg = response.data.detail;
+    }
+    enqueueSnackbar(msg, {
       variant: "error",
     });
   };
 
   const formIsValid = (fieldValues = formValues) => {
     const isValid =
-      fieldValues.name &&
-      //   fieldValues.description &&
-      //   fieldValues.is_active &&
-      Object.values(errors).every((x) => x === "");
+      fieldValues.name && Object.values(errors).every((x) => x === "");
     return isValid;
   };
 

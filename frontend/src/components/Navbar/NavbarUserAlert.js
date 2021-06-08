@@ -9,14 +9,16 @@ import {
   Card,
   Grid,
 } from "@material-ui/core";
-import { useDialog } from "providers/DialogProvider";
+import { useDialog } from "../../providers/DialogProvider";
+import { useSelector } from "react-redux";
 
-function TeacherInfoAlert({ teacher }) {
+function NavbarUserInfoAlert() {
   const { closeDialog } = useDialog();
+  const user = useSelector((state) => state.user.user);
 
   return (
     <Card>
-      <DialogTitle>教师信息</DialogTitle>
+      <DialogTitle>用户信息</DialogTitle>
       <DialogContent>
         <Grid
           container
@@ -29,27 +31,18 @@ function TeacherInfoAlert({ teacher }) {
             <Grid item sm={6}>
               <TextField
                 margin="dense"
-                value={teacher.user.full_name}
+                value={user.full_name}
                 label="名称"
                 type="text"
                 fullWidth
                 disabled
               />
             </Grid>
+
             <Grid item sm={6}>
               <TextField
                 margin="dense"
-                value={teacher.code}
-                label="教师编号"
-                type="text"
-                fullWidth
-                disabled
-              />
-            </Grid>
-            <Grid item sm={6}>
-              <TextField
-                margin="dense"
-                value={teacher.user.email}
+                value={user.email}
                 label="邮箱地址"
                 type="text"
                 fullWidth
@@ -60,9 +53,9 @@ function TeacherInfoAlert({ teacher }) {
               <TextField
                 margin="dense"
                 value={
-                  teacher.user.sex === "SECRET"
+                  user.sex === "SECRET"
                     ? "未设置"
-                    : teacher.user.sex === "MALE"
+                    : user.sex === "MALE"
                     ? "男"
                     : "女"
                 }
@@ -76,7 +69,7 @@ function TeacherInfoAlert({ teacher }) {
             <Grid item sm={6}>
               <TextField
                 margin="dense"
-                value={teacher.user.phone}
+                value={user.phone}
                 label="电话号码"
                 type="text"
                 fullWidth
@@ -84,36 +77,14 @@ function TeacherInfoAlert({ teacher }) {
               />
             </Grid>
 
-            <Grid item sm={6}>
-              <TextField
-                margin="dense"
-                value={teacher.office}
-                label="办公室"
-                type="text"
-                fullWidth
-                disabled
-              />
-            </Grid>
             <Grid item sm={12}>
               <TextField
                 margin="dense"
-                value={teacher.user.address}
+                value={user.address}
                 label="住址"
                 type="text"
                 fullWidth
                 disabled
-              />
-            </Grid>
-            <Grid item sm={12}>
-              <TextField
-                margin="dense"
-                value={teacher.domain}
-                label="擅长领域"
-                type="text"
-                fullWidth
-                disabled
-                multiline
-                rows={2}
               />
             </Grid>
           </Grid>
@@ -129,4 +100,4 @@ function TeacherInfoAlert({ teacher }) {
   );
 }
 
-export default TeacherInfoAlert;
+export default NavbarUserInfoAlert;

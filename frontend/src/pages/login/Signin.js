@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import axios from "axios";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -19,6 +19,7 @@ import Container from "@material-ui/core/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AddToken, AddUser } from "../../redux/actions/userAction";
+// import history from "../../service/history";
 
 function Copyright() {
   return (
@@ -57,9 +58,7 @@ export default function SignIn() {
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  let history = useHistory();
-
-  const token = useSelector((state) => state.user.token);
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
 
@@ -72,22 +71,17 @@ export default function SignIn() {
     }
   };
 
-  const getUserMsg = () => {
+  const getUserMsg = async () => {
     let url = process.env.REACT_APP_ME_API;
-    console.log("!!token");
-    console.log(token);
-    axios
-      .get(
-        url,
 
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Token " + token,
-          },
-          // withCredentials: true,
-        }
-      )
+    return await axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+        // withCredentials: true,
+      })
       .then((response) => {
         console.log(response);
         return response.data;
@@ -95,24 +89,25 @@ export default function SignIn() {
       .then((json) => {
         const user = json;
         dispatch(AddUser(user));
+
         localStorage.setItem("user", JSON.stringify(user));
         console.log(json);
+        return user;
       })
       .catch((error) => {
         console.log("錯誤");
-        console.log(error.response.status);
+        console.log(error.response);
         console.log("账号或密码错误");
+        return {};
       });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     console.log("登录！");
 
     let url = process.env.REACT_APP_LOGIN_API;
-    url = "http://localhost:8000/auth/token/login/";
-
     let form = new FormData();
     form.append("email", email);
     form.append("password", pwd);
@@ -124,7 +119,7 @@ export default function SignIn() {
     var csrfCookie = Cookies.get("csrftoken");
     // console.log(csrfCookie);
 
-    axios
+    const result = await axios
       .post(url, form, {
         headers: {
           "Content-Type": "application/json",
@@ -137,19 +132,21 @@ export default function SignIn() {
         return response.data;
       })
       .then((json) => {
-        const token = json.auth_token;
-        dispatch(AddToken(token));
-        localStorage.setItem("token", token);
-
-        getUserMsg();
-        console.log(token);
-        history.push("/");
+        console.log(json.auth_token);
+        dispatch(AddToken(json.auth_token));
+        localStorage.setItem("token", json.auth_token);
+        return true;
       })
       .catch((error) => {
         console.log("錯誤");
-        console.log(error.response.status);
+        console.log(error.response);
         console.log("账号或密码错误");
+        return false;
       });
+    if (result) {
+      await getUserMsg();
+      history.push("/");
+    }
   };
 
   return (
@@ -160,7 +157,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          登录
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
@@ -169,7 +166,7 @@ export default function SignIn() {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="邮箱地址"
             name="email"
             autoComplete="email"
             autoFocus
@@ -182,7 +179,7 @@ export default function SignIn() {
             required
             fullWidth
             name="pwd"
-            label="Password"
+            label="密码"
             type="password"
             id="pwd"
             value={pwd}
@@ -191,7 +188,7 @@ export default function SignIn() {
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            label="记住我"
           />
           <Button
             type="submit"
@@ -200,17 +197,17 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            登录
           </Button>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                Forgot password?
+                忘记密码？
               </Link>
             </Grid>
             <Grid item>
               <Link href="/sign-up" variant="body2">
-                {"Don't have an account? Sign Up"}
+                {"注册管理员账号"}
               </Link>
             </Grid>
           </Grid>

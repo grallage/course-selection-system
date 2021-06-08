@@ -1,21 +1,25 @@
-import axios from "axios";
 import { useEffect } from "react";
+import axios from "service/axiosConfig";
+import { useSnackbar } from "notistack";
+import { useHistory, useParams } from "react-router-dom";
 
 import Button from "@material-ui/core/Button";
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
-import { useHistory, useParams } from "react-router-dom";
-import { ButtonGroup } from "@material-ui/core";
+import { useSelector } from "react-redux";
 import { SwitchLabel } from "./MajorFormElements";
-
 import { useFormControls } from "./MajorFormControls";
 
 export default function MajorForm({ type }) {
-  let history = useHistory();
+  const history = useHistory();
   const { id } = useParams();
+  const token = useSelector((state) => state.user.token);
+  const { enqueueSnackbar } = useSnackbar();
+
   const {
     formValues,
     setFormValues,
@@ -27,7 +31,6 @@ export default function MajorForm({ type }) {
 
   useEffect(async () => {
     if (type === "edit") {
-      // console.log("编辑");
       let { name, description, is_active } = await getMajor();
       setFormValues({
         ...formValues,
@@ -36,6 +39,12 @@ export default function MajorForm({ type }) {
         name,
         description,
         is_active,
+        token,
+      });
+    } else {
+      setFormValues({
+        ...formValues,
+        token,
       });
     }
   }, []);
@@ -43,8 +52,6 @@ export default function MajorForm({ type }) {
   const handleSubmitAndReturnToListPage = (event) => {
     handleFormSubmit(event).then((result) => {
       if (result) {
-        // console.log("result:");
-        // console.log(result);
         history.push("/major");
       }
     });
@@ -53,16 +60,11 @@ export default function MajorForm({ type }) {
   const getMajor = async () => {
     let url = `${process.env.REACT_APP_MAJOR_API}${id}/`;
     return await axios
-      .get(url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .get(url)
       .then((response) => {
         return response.data;
       })
       .then((json) => {
-        // console.log(json);
         return {
           name: json.name,
           description: json.description,
@@ -70,8 +72,12 @@ export default function MajorForm({ type }) {
         };
       })
       .catch((error) => {
-        console.log("錯誤");
-        // console.log(error);
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          enqueueSnackbar(response.data.detail, {
+            variant: "error",
+          });
+        }
         return { name: "", description: "", is_active: false };
       });
   };
@@ -148,8 +154,6 @@ export default function MajorForm({ type }) {
           </Button>
         </ButtonGroup>
       </Grid>
-      {/* </Grid> */}
-      {/* </form> */}
     </>
   );
 }

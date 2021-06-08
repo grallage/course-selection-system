@@ -4,6 +4,8 @@ import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 
+import { Link } from "react-router-dom";
+
 const drawerWidth = 240;
 
 // transition: theme.transitions.create(["width", "margin"], {
@@ -29,6 +31,11 @@ export const ToolbarLeft = styled(IconButton)`
 
 export const ToolbarTitle = styled(Typography)`
   font-size: 1.3rem;
+  margin-left: 10px;
+`;
+export const ToolbarLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 `;
 
 export const ToolbarMiddle = styled.div`

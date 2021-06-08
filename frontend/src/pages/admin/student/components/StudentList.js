@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import axios from "axios";
+import axios from "service/axiosConfig";
 
 import { useSnackbar } from "notistack";
 import { useLocation } from "react-router-dom";
@@ -21,16 +21,16 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { ButtonGroup } from "@material-ui/core";
 import Icon from "@material-ui/core/Icon";
 
-import { AiFillEdit, AiFillDelete, AiFillInfoCircle } from "react-icons/ai";
+import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 
 import {
   CommonLink,
   LinkWrapper,
   MainSearchForm,
   TableWapper,
-} from "../../../../components/commom/CommonElements";
+} from "components/commom/CommonElements";
 import StudentDeleteAlert from "./StudentDeleteAlert";
-import { useDialog } from "../../../../providers/DialogProvider";
+import { useDialog } from "providers/DialogProvider";
 
 function createData({ user, code, class_info }) {
   return { user, code, class_info };
@@ -42,7 +42,7 @@ const initialSearchForm = {
 };
 
 const StudentList = () => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchForm, setSearchForm] = React.useState(initialSearchForm);
 
@@ -52,7 +52,7 @@ const StudentList = () => {
   const [students, setStudents] = React.useState([]);
   const location = useLocation();
 
-  const { createDialog, closeDialog } = useDialog();
+  const { createDialog } = useDialog();
 
   const handleChangeRowsPerPage = (event) => {
     setPageSize(parseInt(event.target.value, 10));
@@ -86,11 +86,7 @@ const StudentList = () => {
     let url = `${process.env.REACT_APP_STUDENT_API}${id}/`;
 
     axios
-      .delete(url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .delete(url)
       .then((response) => {
         return response.data;
       })
@@ -101,11 +97,14 @@ const StudentList = () => {
         getStudentList();
       })
       .catch((error) => {
-        console.log("錯誤");
-        enqueueSnackbar("操作失败", {
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
           variant: "error",
         });
-        console.log(error);
       });
   };
 
@@ -116,50 +115,40 @@ const StudentList = () => {
 
     let url = process.env.REACT_APP_STUDENT_API;
 
-    axios.defaults.xsrfCookieName = "csrftoken";
-    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-    axios.defaults.withCredentials = true;
-
-    // var csrfCookie = Cookies.get("csrftoken");
-    // console.log(csrfCookie);
     return axios
-      .get(
-        url,
-        {
-          params: {
-            full_name: searchForm.full_name,
-            class_name: searchForm.class_name,
-            page: page + 1,
-            page_size: pageSize,
-            ordering: "-id",
-          },
+      .get(url, {
+        params: {
+          full_name: searchForm.full_name,
+          class_name: searchForm.class_name,
+          page: page + 1,
+          page_size: pageSize,
+          ordering: "-id",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      })
       .then((response) => {
-        // console.log(response);
         return response.data;
       })
       .then((json) => {
         setCount(json.count);
         const data = json.results.map((item) => createData(item));
-        // console.log(data);
+
         setStudents(data);
       })
       .catch((error) => {
-        console.log("錯誤");
-        console.log(error);
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
+          variant: "error",
+        });
       });
   };
 
   return (
     <>
       <Grid item xs={12}>
-        {/* <Paper component="form"> */}
         <MainSearchForm>
           <TextField
             label="学生名称"
@@ -271,7 +260,6 @@ const StudentList = () => {
               setPage(newPage);
             }}
             onChangeRowsPerPage={handleChangeRowsPerPage}
-            // ActionsComponent={TablePaginationActions}
           />
         </Paper>
       </Grid>

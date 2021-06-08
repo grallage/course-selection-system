@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  PageContainer,
-  GridContainer,
-} from "../../../components/commom/CommonElements";
-
+import { PageContainer, GridContainer } from "components/commom/CommonElements";
 import PasswordForm from "./components/PasswordForm";
 
 function PasswordPage() {

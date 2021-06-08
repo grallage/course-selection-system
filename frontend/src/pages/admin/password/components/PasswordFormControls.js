@@ -1,8 +1,7 @@
 import React from "react";
-import Cookies from "js-cookie";
-import axios from "axios";
+import axios from "service/axiosConfig";
+
 import { useSnackbar } from "notistack";
-import { useSelector } from "react-redux";
 
 const initialFormValues = {
   // form fields
@@ -25,23 +24,12 @@ const PostForm = async (values, successCallback, errorCallback) => {
   form.append("new_password1", values.new_password1);
   form.append("new_password2", values.new_password2);
 
-  axios.defaults.xsrfCookieName = "csrftoken";
-  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-  axios.defaults.withCredentials = true;
-
   axios
-    .put(url, form, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${values.token}`,
-      },
-    })
+    .put(url, form)
     .then((response) => {
-      console.log(response);
       return response.data;
     })
     .then((json) => {
-      console.log(json);
       successCallback();
     })
     .catch((error) => {
@@ -110,9 +98,6 @@ export const useFormControls = () => {
     });
   };
   const handleError = (response) => {
-    console.log("handleError:");
-    console.log(response);
-
     setFormValues({
       ...formValues,
       formSubmitted: true,
@@ -125,6 +110,14 @@ export const useFormControls = () => {
         enqueueSnackbar(msg, {
           variant: "error",
         });
+      });
+    } else if (response.data.detail) {
+      let msg = "操作失败";
+      if (response && response.data && response.data.detail) {
+        msg = response.data.detail;
+      }
+      enqueueSnackbar(msg, {
+        variant: "error",
       });
     } else {
       enqueueSnackbar("操作失败", {

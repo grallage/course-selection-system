@@ -6,11 +6,11 @@ import {
   DialogContent,
   DialogActions,
 } from "@material-ui/core";
-import { useDialog } from "../../../../providers/DialogProvider";
+
+import { useDialog } from "providers/DialogProvider";
 
 function MajorDeleteAlert({ major, handleDelete }) {
-  const { createDialog, closeDialog } = useDialog();
-
+  const { closeDialog } = useDialog();
   const handleSubmit = () => {
     handleDelete(major);
     closeDialog();

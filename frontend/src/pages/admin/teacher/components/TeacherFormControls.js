@@ -1,6 +1,5 @@
 import React from "react";
-import Cookies from "js-cookie";
-import axios from "axios";
+import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
 
 const initialFormValues = {
@@ -43,19 +42,10 @@ const PostForm = async (values, successCallback, errorCallback) => {
   form.append("domain", values.domain);
   form.append("office", values.office);
 
-  axios.defaults.xsrfCookieName = "csrftoken";
-  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-  axios.defaults.withCredentials = true;
-
-  var csrfCookie = Cookies.get("csrftoken");
-  // console.log(csrfCookie);
   return await axios({
     method: values.formType === "create" ? "post" : "put",
     url: url,
     data: form,
-    header: {
-      "Content-Type": "application/json",
-    },
   })
     .then((response) => {
       console.log(response);
@@ -76,7 +66,7 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
   const [formValues, setFormValues] = React.useState(initialFormValues);
   //   const [closeDialogFunction, setCloseDialogFunction] = React.useState();
   const [errors, setErrors] = React.useState({});
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const validate = (fieldValues = formValues) => {
     let tempErrors = { ...errors };
@@ -172,6 +162,14 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
           variant: "error",
         });
       });
+    } else if (response.data && response.data.detail) {
+      let msg = "操作失败";
+      if (response && response.data && response.data.detail) {
+        msg = response.data.detail;
+      }
+      enqueueSnackbar(msg, {
+        variant: "error",
+      });
     } else {
       enqueueSnackbar("操作失败", {
         variant: "error",
@@ -210,6 +208,5 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
     handleInputValue,
     handleFormSubmit,
     formIsValid,
-    // setCloseDialogFunction,
   };
 };

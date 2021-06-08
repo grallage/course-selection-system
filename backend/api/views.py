@@ -4,20 +4,39 @@ from rest_framework import viewsets, permissions, urls, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
+from django.contrib.auth.models import AnonymousUser
+
 
 from . import serializers, models, filters
 from django_filters.rest_framework import DjangoFilterBackend
 import logging, string, datetime
 
+from django.contrib.auth import logout as auth_logout
+
 logger = logging.getLogger(__name__)
 
 
+class AdminPermission(permissions.BasePermission):
+    message = "权限不足"
+
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view, obj)
+
+    def has_permission(self, request, view):
+        user = request.user
+        if isinstance(user, AnonymousUser) and not user.is_admin:
+            return False
+        return True
+
+
 class UserViewSet(viewsets.ModelViewSet):
+    permission_classes = [AdminPermission]
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
 
 
 class MajorViewSet(viewsets.ModelViewSet):
+    permission_classes = [AdminPermission]
     queryset = models.Major.objects.all()
     serializer_class = serializers.MajorSerializer
     filterset_class = filters.MajorFilterSet
@@ -26,6 +45,7 @@ class MajorViewSet(viewsets.ModelViewSet):
 
 
 class ClassInfoViewSet(viewsets.ModelViewSet):
+    permission_classes = [AdminPermission]
     queryset = models.ClassInfo.objects.all()
     serializer_class = serializers.ClassInfoSerializer
     filterset_class = filters.ClassInfoFilterSet
@@ -81,6 +101,7 @@ class ClassInfoViewSet(viewsets.ModelViewSet):
 
 
 class StudentViewSet(viewsets.ModelViewSet):
+    permission_classes = [AdminPermission]
     queryset = models.Student.objects.all()
     serializer_class = serializers.StudentSerializer
     filterset_class = filters.StudentFilterSet
@@ -94,6 +115,7 @@ class StudentViewSet(viewsets.ModelViewSet):
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
+    permission_classes = [AdminPermission]
     queryset = models.Teacher.objects.all()
     serializer_class = serializers.TeacherSerializer
     filterset_class = filters.TeacherFilterSet
@@ -107,21 +129,31 @@ class TeacherViewSet(viewsets.ModelViewSet):
 
 
 class CourseViewSet(viewsets.ModelViewSet):
+    permission_classes = [AdminPermission]
     queryset = models.Course.objects.all()
     serializer_class = serializers.CourseSerializer
 
 
 class CourseScheduleViewSet(viewsets.ModelViewSet):
+    permission_classes = [AdminPermission]
     queryset = models.CourseSchedule.objects.all()
     serializer_class = serializers.CourseScheduleSerializer
 
 
 class StudentCourseViewSet(viewsets.ModelViewSet):
+    permission_classes = [AdminPermission]
     queryset = models.StudentCourse.objects.all()
     serializer_class = serializers.StudentCourseSerializer
 
 
 class PasswordView(UpdateAPIView):
+    permission_classes = [AdminPermission]
     serializer_class = serializers.PasswordSerializer
     model = models.User
     queryset = models.User.objects.all()
+
+
+def logout(self, request):
+    logger.info("##########################")
+    auth_logout(request)
+    return Response(status=status.HTTP_200_OK)

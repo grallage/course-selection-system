@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import axios from "service/axiosConfig";
 
-import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
@@ -23,13 +23,22 @@ import {
   ToolbarRightPC,
   ToolbarRightMobile,
   NavbarContainer,
+  ToolbarLink,
 } from "./NavbarElements";
 import { EmptyToolbar } from "../Toolbar/ToolbarElements";
 
+import { useHistory } from "react-router";
+import { RemoveUser } from "../../redux/actions/userAction";
+import NavbarUserInfoAlert from "./NavbarUserAlert";
+import { useDialog } from "../../providers/DialogProvider";
+
 const Navbar = () => {
   const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
   const sidebar = useSelector((state) => state.sidebar);
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { createDialog } = useDialog();
 
   const [profileBtn, setProfileBtn] = useState(null);
   const [mobileMoreBtn, setMobileMoreBtn] = useState(null);
@@ -54,6 +63,24 @@ const Navbar = () => {
   const handleMobileMenuClose = () => setMobileMoreBtn(null);
   const handleProfileMenuClose = () => setProfileBtn(null);
 
+  const handleLogout = async () => {
+    dispatch(RemoveUser());
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    let url = process.env.REACT_APP_LOGOUT_API;
+
+    await axios
+      .post(url, {})
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log("錯誤");
+        console.log(error.response.status);
+      });
+    history.push("/sign-in");
+  };
+
   const profileMenu = (
     <Menu
       anchorEl={profileBtn}
@@ -63,8 +90,8 @@ const Navbar = () => {
       open={isProfileMenuOpen}
       onClose={handleProfileMenuClose}
     >
-      <MenuItem>个人信息</MenuItem>
-      <MenuItem>退出</MenuItem>
+      <MenuItem onClick={() => openUserDialog()}>个人信息</MenuItem>
+      <MenuItem onClick={handleLogout}>退出</MenuItem>
     </Menu>
   );
 
@@ -82,6 +109,12 @@ const Navbar = () => {
     </Menu>
   );
 
+  const openUserDialog = () => {
+    createDialog({
+      children: <NavbarUserInfoAlert />,
+    });
+  };
+
   return (
     <>
       <NavbarContainer position="fixed" showsidebar={sidebar.display ? 1 : 0}>
@@ -92,14 +125,15 @@ const Navbar = () => {
               <MenuIcon />
             </ToolbarLeft>
           )}
-
           <ToolbarTitle>
-            学生选课系统 -
-            {user.is_admin
-              ? " 管理员后台"
-              : user.is_teacher
-              ? " 教师后台"
-              : " 学生后台"}
+            <ToolbarLink to="/">
+              学生选课系统 -
+              {user.is_admin
+                ? " 管理员后台"
+                : user.is_teacher
+                ? " 教师后台"
+                : " 学生后台"}
+            </ToolbarLink>
           </ToolbarTitle>
           <ToolbarMiddle />
 

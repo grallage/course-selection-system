@@ -1,10 +1,6 @@
 import React from "react";
-
 import ClassForm from "./components/ClassForm";
-import {
-  GridContainer,
-  PageContainer,
-} from "../../../components/commom/CommonElements";
+import { GridContainer, PageContainer } from "components/commom/CommonElements";
 
 import { Switch, Route } from "react-router-dom";
 import ClassList from "./components/ClassList";

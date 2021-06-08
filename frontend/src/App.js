@@ -26,6 +26,8 @@ import Notification from "./components/Notification/Notification";
 import AlertDialog from "./components/Alerts/Alerts";
 import PasswordPage from "./pages/admin/password/PasswordPage";
 
+import history from "./service/history";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -41,45 +43,44 @@ function App() {
 
   const UserPages = () => (
     <>
-      <Router>
-        {/* <AlertDialog /> */}
-        <Navbar />
-        <Sidebar />
-        <MainContainer>
-          <Breadcrumbs />
+      {/* <Router history={history}> */}
+      {/* <AlertDialog /> */}
+      <Navbar />
+      <Sidebar />
+      <MainContainer>
+        <Breadcrumbs />
 
-          <Switch>
-            {(isTeacher || isStudent) && (
-              <>
-                <Route path="/teacher" component={studentTeacherPage} />
-                <Route
-                  path="/course"
-                  component={
-                    isTeacher ? teacherCoursesPage : studentCoursesPage
-                  }
-                />
-              </>
-            )}
-            {isAdmin && (
-              <>
-                <Route exact path="/" component={adminPage} />
-                <Route path="/major" component={MajorPage} />
-                <Route path="/class" component={ClassPage} />
-                <Route path="/teacher" component={TeacherPage} />
-                <Route path="/student" component={StudentPage} />
-                <Route exact path="/password" component={PasswordPage} />
-              </>
-            )}
-          </Switch>
-        </MainContainer>
-      </Router>
+        <Switch>
+          {(isTeacher || isStudent) && (
+            <>
+              <Route path="/teacher" component={studentTeacherPage} />
+              <Route
+                path="/course"
+                component={isTeacher ? teacherCoursesPage : studentCoursesPage}
+              />
+            </>
+          )}
+          {isAdmin && (
+            <>
+              <Route exact path="/" component={adminPage} />
+              <Route path="/major" component={MajorPage} />
+              <Route path="/class" component={ClassPage} />
+              <Route path="/teacher" component={TeacherPage} />
+              <Route path="/student" component={StudentPage} />
+              <Route exact path="/password" component={PasswordPage} />
+            </>
+          )}
+        </Switch>
+      </MainContainer>
+      {/* </Router> */}
     </>
   );
 
   return (
     // <div className={classes.root}>
     <>
-      <Router>
+      {/* <Router history={history} forceRefresh={true}> */}
+      <Router history={history}>
         <Notification />
         <Switch>
           <Route exact path="/sign-in" component={signin} />

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
+import axios from "service/axiosConfig";
+
 import { useSnackbar } from "notistack";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
@@ -19,27 +19,26 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import { ButtonGroup, Button } from "@material-ui/core";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Icon from "@material-ui/core/Icon";
 
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import { FcCheckmark, FcCancel } from "react-icons/fc";
+import { AiFillDelete } from "react-icons/ai";
 
 import {
   CommonLink,
   LinkWrapper,
   MainSearchForm,
   TableWapper,
-} from "../../../../components/commom/CommonElements";
+} from "components/commom/CommonElements";
 import ClassDeleteAlert from "./ClassDeleteAlert";
-import { useDialog } from "../../../../providers/DialogProvider";
+import { useDialog } from "providers/DialogProvider";
 
 function createData({ id, name, year, created_at, modified_at, major }) {
   return { id, name, year, created_at, modified_at, major };
 }
 
 const ClassList = () => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [name, setName] = React.useState("");
   const [majorName, setMajorName] = React.useState("");
@@ -50,8 +49,8 @@ const ClassList = () => {
   const [classList, setClassList] = React.useState([]);
 
   const location = useLocation();
-  // const [openDialog, closeDialog] = useDialog();
-  const { createDialog, closeDialog } = useDialog();
+
+  const { createDialog } = useDialog();
 
   const handleChangeRowsPerPage = (event) => {
     setPageSize(parseInt(event.target.value, 10));
@@ -61,12 +60,11 @@ const ClassList = () => {
   useEffect(() => {
     const parsed = queryString.parse(location.search);
     setName(parsed.name ? String(parsed.name) : "");
-    getClassList();
-  }, [page, pageSize]);
+  }, []);
 
   useEffect(() => {
     getClassList();
-  }, [name, majorName]);
+  }, [name, majorName, page, pageSize]);
 
   const handleChange = (event) => {
     if (event.target.name === "name") {
@@ -88,13 +86,9 @@ const ClassList = () => {
   const handleDelete = (major) => {
     const id = major.id;
     let url = `${process.env.REACT_APP_CLASS_API}${id}/`;
-    console.log(url);
+
     axios
-      .delete(url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .delete(url)
       .then((response) => {
         return response.data;
       })
@@ -105,11 +99,14 @@ const ClassList = () => {
         getClassList();
       })
       .catch((error) => {
-        console.log("錯誤");
-        enqueueSnackbar("操作失败", {
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
           variant: "error",
         });
-        console.log(error);
       });
   };
 
@@ -120,32 +117,17 @@ const ClassList = () => {
 
     let url = process.env.REACT_APP_CLASS_API;
 
-    axios.defaults.xsrfCookieName = "csrftoken";
-    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-    axios.defaults.withCredentials = true;
-
-    // var csrfCookie = Cookies.get("csrftoken");
-    // console.log(csrfCookie);
     return axios
-      .get(
-        url,
-        {
-          params: {
-            name: name,
-            major_name: majorName,
-            page: page + 1,
-            page_size: pageSize,
-            ordering: "-id",
-          },
+      .get(url, {
+        params: {
+          name: name,
+          major_name: majorName,
+          page: page + 1,
+          page_size: pageSize,
+          ordering: "-id",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      })
       .then((response) => {
-        // console.log(response);
         return response.data;
       })
       .then((json) => {
@@ -154,15 +136,20 @@ const ClassList = () => {
         setClassList(data);
       })
       .catch((error) => {
-        console.log("錯誤");
-        console.log(error);
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
+          variant: "error",
+        });
       });
   };
 
   return (
     <>
       <Grid item xs={12}>
-        {/* <Paper component="form"> */}
         <MainSearchForm>
           <TextField
             label="班级名称"
@@ -264,7 +251,6 @@ const ClassList = () => {
               setPage(newPage);
             }}
             onChangeRowsPerPage={handleChangeRowsPerPage}
-            // ActionsComponent={TablePaginationActions}
           />
         </Paper>
       </Grid>

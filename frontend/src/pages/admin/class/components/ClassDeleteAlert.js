@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@material-ui/core";
-import { useDialog } from "../../../../providers/DialogProvider";
+import { useDialog } from "providers/DialogProvider";
 
 function ClassDeleteAlert({ classInfo, handleDelete }) {
   const { createDialog, closeDialog } = useDialog();

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import axios from "axios";
+import axios from "service/axiosConfig";
 
 import { useSnackbar } from "notistack";
 import { useLocation } from "react-router-dom";
-import queryString from "query-string";
+// import queryString from "query-string";
 
 import Link from "@material-ui/core/Link";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -27,9 +27,9 @@ import {
   LinkWrapper,
   MainSearchForm,
   TableWapper,
-} from "../../../../components/commom/CommonElements";
+} from "components/commom/CommonElements";
 import TeacherDeleteAlert from "./TeacherDeleteAlert";
-import { useDialog } from "../../../../providers/DialogProvider";
+import { useDialog } from "providers/DialogProvider";
 import TeacherInfoAlert from "./TeacherInfoAlert";
 import TeacherEditAlert from "./TeacherEditAlert";
 
@@ -43,7 +43,7 @@ const initialSearchForm = {
 };
 
 const TeacherList = () => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchForm, setSearchForm] = React.useState(initialSearchForm);
 
@@ -52,22 +52,20 @@ const TeacherList = () => {
   const [count, setCount] = React.useState(0);
   const [teachers, setTeachers] = React.useState([]);
   const location = useLocation();
-
-  const { createDialog, closeDialog } = useDialog();
+  const { createDialog } = useDialog();
 
   const handleChangeRowsPerPage = (event) => {
     setPageSize(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  useEffect(() => {
-    const parsed = queryString.parse(location.search);
-    getTeacherList();
-  }, [page, pageSize]);
+  // useEffect(() => {
+  //   const parsed = queryString.parse(location.search);
+  // }, []);
 
   useEffect(() => {
     getTeacherList();
-  }, [searchForm]);
+  }, [searchForm, page, pageSize]);
 
   const handleChange = (event) => {
     const { name, value, checked } = event.target;
@@ -125,11 +123,14 @@ const TeacherList = () => {
         getTeacherList();
       })
       .catch((error) => {
-        console.log("錯誤");
-        enqueueSnackbar("操作失败", {
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
           variant: "error",
         });
-        console.log(error);
       });
   };
 
@@ -140,49 +141,40 @@ const TeacherList = () => {
 
     let url = process.env.REACT_APP_TEACHER_API;
 
-    axios.defaults.xsrfCookieName = "csrftoken";
-    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-    axios.defaults.withCredentials = true;
-
-    // var csrfCookie = Cookies.get("csrftoken");
-    // console.log(csrfCookie);
     return axios
-      .get(
-        url,
-        {
-          params: {
-            full_name: searchForm.full_name,
+      .get(url, {
+        params: {
+          full_name: searchForm.full_name,
 
-            page: page + 1,
-            page_size: pageSize,
-            ordering: "-id",
-          },
+          page: page + 1,
+          page_size: pageSize,
+          ordering: "-id",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      })
       .then((response) => {
         return response.data;
       })
       .then((json) => {
         setCount(json.count);
         const data = json.results.map((item) => createData(item));
-        // console.log(data);
+
         setTeachers(data);
       })
       .catch((error) => {
-        console.log("錯誤");
-        console.log(error);
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
+          variant: "error",
+        });
       });
   };
 
   return (
     <>
       <Grid item xs={12}>
-        {/* <Paper component="form"> */}
         <MainSearchForm>
           <TextField
             label="教师名称"
@@ -295,7 +287,6 @@ const TeacherList = () => {
               setPage(newPage);
             }}
             onChangeRowsPerPage={handleChangeRowsPerPage}
-            // ActionsComponent={TablePaginationActions}
           />
         </Paper>
       </Grid>

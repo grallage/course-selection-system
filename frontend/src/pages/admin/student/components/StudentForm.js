@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "service/axiosConfig";
 import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { SwitchLabel } from "../../major/components/MajorFormElements";
@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
   TextField,
-  Card,
   Grid,
   FormLabel,
   RadioGroup,
@@ -19,12 +18,14 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
+import { useSnackbar } from "notistack";
 
 import { useFormControls } from "./StudentFormControls";
 
 export default function StudentForm({ type }) {
   let history = useHistory();
   const { id } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     formValues,
@@ -54,8 +55,6 @@ export default function StudentForm({ type }) {
         classes,
         formType: "edit",
       });
-      console.log("#####");
-      console.log(student);
     } else {
       const classId = classes[0] ? classes[0].id : -1;
       setFormValues({
@@ -82,16 +81,19 @@ export default function StudentForm({ type }) {
           get_all: true,
           is_active: true,
         },
-        headers: {
-          "Content-Type": "application/json",
-        },
       })
       .then((response) => {
         return response.data;
       })
       .catch((error) => {
-        console.log("錯誤");
-        console.log(error.response);
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
+          variant: "error",
+        });
         return [];
       });
   };
@@ -100,16 +102,19 @@ export default function StudentForm({ type }) {
     return await axios
       .get(url, {
         params: {},
-        headers: {
-          "Content-Type": "application/json",
-        },
       })
       .then((response) => {
         return response.data;
       })
       .catch((error) => {
-        console.log("錯誤");
-        console.log(error.response);
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
+          variant: "error",
+        });
         return [];
       });
   };
@@ -251,8 +256,6 @@ export default function StudentForm({ type }) {
           </Button>
         </ButtonGroup>
       </Grid>
-      {/* </Grid> */}
-      {/* </form> */}
     </>
   );
 }
