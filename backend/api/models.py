@@ -189,8 +189,8 @@ class CourseSchedule(models.Model):
         )
 
     class Meta:
-        # ordering = ["id", "week", "time_span"]
-        ordering = ["id"]
+        ordering = ["time_span", "week"]
+        # ordering = ["id"]
         db_table = "course_schedule"
 
 

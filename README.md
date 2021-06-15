@@ -34,4 +34,7 @@ yarn add history
 yarn add react-bootstrap bootstrap@4.6.0
 yarn add react-dual-listbox
 yarn add react-datepicker
+yarn add react-select
+yarn add react-switch
+
 ```

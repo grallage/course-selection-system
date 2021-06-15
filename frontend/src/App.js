@@ -23,6 +23,7 @@ import PasswordPage from "./pages/admin/password/PasswordPage";
 import studentTeacherPage from "./pages/student/teacher/teachers";
 import studentCoursesPage from "./pages/student/course/courses";
 import teacherCoursesPage from "./pages/teacher/course/CoursePage";
+import teacherSchedulePage from "./pages/teacher/schedule/SchedulePage";
 import adminPage from "./pages/admin/index";
 import signin from "./pages/login/Signin";
 import signup from "./pages/login/Signup";
@@ -71,6 +72,7 @@ function App() {
           <TeacherSidebar />
           <Route exact path="/" component={teacherPage} />
           <Route path="/course" component={teacherCoursesPage} />
+          <Route path="/schedule" component={teacherSchedulePage} />
         </>
       )}
     </>

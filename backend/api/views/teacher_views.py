@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.db.models import Q
 from rest_framework import viewsets, permissions, urls, status
 from rest_framework.filters import OrderingFilter
 from django.contrib.auth.models import AnonymousUser
@@ -52,7 +52,39 @@ class CourseViewSet(viewsets.ModelViewSet):
             return serializers.CourseEditSerializer
         return serializers.CourseSerializer
 
+    def get_queryset(self):
+        user = self.request.user
+        queryset = super().get_queryset()
+        return queryset.filter(teacher__user__id=user.id)
+
 
 # class CourseViewSet(viewsets.ModelViewSet):
 #     queryset = models.Course.objects.all()
 #     serializer_class = serializers.CourseSerializer
+
+
+class CourseScheduleViewSet(viewsets.ModelViewSet):
+    permission_classes = [TeacherPermission]
+    queryset = models.CourseSchedule.objects.all()
+    serializer_class = serializers.CourseScheduleSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    ordering_fields = "__all__"
+
+    def get_queryset(self):
+        showOtherTeacherCourse = self.request.GET.get("showOtherTeacherCourse", False)
+        user = self.request.user
+        queryset = super().get_queryset()
+        if showOtherTeacherCourse:
+            class_ids = (
+                models.Course.objects.filter(
+                    teacher__user__id=user.id,
+                    # is_compulsory=True
+                )
+                .values("class_info__id")
+                .distinct()
+            )
+            return queryset.filter(
+                Q(course__class_info__id__in=class_ids) | Q(teacher_id=user.id)
+            ).distinct()
+
+        return queryset.filter(teacher__user__id=user.id)
