@@ -136,7 +136,7 @@ class Teacher(models.Model):
 
 class Course(models.Model):
 
-    student = models.ManyToManyField(
+    students = models.ManyToManyField(
         Student, related_name="courses", through="StudentCourse"
     )
     class_info = models.ForeignKey(

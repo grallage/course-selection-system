@@ -1,4 +1,4 @@
-from . import models
+from .. import models
 from django_filters import rest_framework as filters
 
 

@@ -1,11 +1,5 @@
 import React from "react";
 import Dialog from "@material-ui/core/Dialog";
-import {
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Typography,
-} from "@material-ui/core";
 
 const DialogContext = React.createContext();
 

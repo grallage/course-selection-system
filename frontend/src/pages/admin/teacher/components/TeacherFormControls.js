@@ -143,13 +143,13 @@ export const useFormControls = ({ closeDialog, getTeacherList }) => {
 
     if (formValues.formType === "create") {
       setFormValues({
-        ...initialFormValues,
+        ...formValues,
         formSubmitted: true,
         success: false,
       });
     } else {
       setFormValues({
-        ...formValues,
+        ...initialFormValues,
         formSubmitted: true,
         success: false,
       });

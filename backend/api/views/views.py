@@ -7,7 +7,9 @@ from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 
 
-from . import serializers, models, filters
+from .. import models
+from ..serializers import serializers
+from ..filters import filters
 from django_filters.rest_framework import DjangoFilterBackend
 import logging, string, datetime
 

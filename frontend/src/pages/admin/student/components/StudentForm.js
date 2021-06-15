@@ -1,4 +1,5 @@
 import axios from "service/axiosConfig";
+import { useSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { SwitchLabel } from "../../major/components/MajorFormElements";
@@ -18,7 +19,6 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { useSnackbar } from "notistack";
 
 import { useFormControls } from "./StudentFormControls";
 

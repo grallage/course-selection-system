@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db.models import fields
 from rest_framework.fields import ReadOnlyField
-from . import models
+from .. import models
 from rest_framework import serializers
 import logging
 
@@ -46,7 +46,7 @@ class TeacherSerializer(serializers.ModelSerializer):
         code = (
             str(user.created_at.year)
             + "95"  # 標識為教師
-            + str(models.Teacher.objects.all().count()).zfill(5)
+            + str(models.Teacher.objects.all().count() + 1).zfill(5)
         )
 
         teacher = models.Teacher.objects.create(user=user, code=code, **validated_data)

@@ -137,10 +137,6 @@ const MajorList = () => {
           page_size: pageSize,
           ordering: "-id",
         },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
       })
       .then((response) => {
         // console.log(response);

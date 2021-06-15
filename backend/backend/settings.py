@@ -158,7 +158,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3002",
 ]
 
-DJOSER = {"SERIALIZERS": {"user": "api.serializers.UserSerializer"}}
+DJOSER = {"SERIALIZERS": {"user": "api.serializers.serializers.UserSerializer"}}
 
 
 # logging

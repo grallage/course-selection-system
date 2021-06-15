@@ -34,7 +34,6 @@ import { useDialog } from "../../providers/DialogProvider";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user.user);
-  const token = useSelector((state) => state.user.token);
   const sidebar = useSelector((state) => state.sidebar);
   const dispatch = useDispatch();
   const history = useHistory();

@@ -13,6 +13,7 @@ import { SnackbarProvider } from "notistack";
 import { Provider } from "react-redux";
 import store from "./store";
 import DialogProvider from "./providers/DialogProvider";
+import DialogBootstrapProvider from "./providers/DialogBootstrapProvider";
 
 const theme = createMuiTheme();
 
@@ -34,14 +35,15 @@ ReactDOM.render(
               }}
             >
               <DialogProvider>
-                <App />
+                <DialogBootstrapProvider>
+                  <App />
+                </DialogBootstrapProvider>
               </DialogProvider>
             </SnackbarProvider>
           </Provider>
         </ThemeProvider>
       </MuiThemeProvider>
     </StylesProvider>
-    ,
   </React.StrictMode>,
   document.getElementById("root")
 );

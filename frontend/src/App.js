@@ -1,5 +1,5 @@
-import logo from "./logo.svg";
 import "./App.css";
+import history from "./service/history";
 //
 import React from "react";
 import Navbar from "./components/Navbar/Navbar";
@@ -7,13 +7,6 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
-import studentTeacherPage from "./pages/student/teacher/teachers";
-import studentCoursesPage from "./pages/student/course/courses";
-import teacherCoursesPage from "./pages/teacher/course/Courses";
-import adminPage from "./pages/admin/index";
-import signin from "./pages/login/Signin";
-import signup from "./pages/login/Signup";
 
 import { useDispatch, useSelector } from "react-redux";
 import ClassPage from "./pages/admin/class/ClassPage";
@@ -26,7 +19,19 @@ import Notification from "./components/Notification/Notification";
 import AlertDialog from "./components/Alerts/Alerts";
 import PasswordPage from "./pages/admin/password/PasswordPage";
 
-import history from "./service/history";
+// page
+import studentTeacherPage from "./pages/student/teacher/teachers";
+import studentCoursesPage from "./pages/student/course/courses";
+import teacherCoursesPage from "./pages/teacher/course/CoursePage";
+import adminPage from "./pages/admin/index";
+import signin from "./pages/login/Signin";
+import signup from "./pages/login/Signup";
+import teacherPage from "./pages/teacher/index";
+import TeacherNavbar from "./components-teacher/Navbar/Navbar";
+import TeacherSidebar from "./components-teacher/Sidebar/Sidebar";
+
+// css
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,45 +48,37 @@ function App() {
 
   const UserPages = () => (
     <>
-      {/* <Router history={history}> */}
-      {/* <AlertDialog /> */}
-      <Navbar />
-      <Sidebar />
-      <MainContainer>
-        <Breadcrumbs />
-
-        <Switch>
-          {(isTeacher || isStudent) && (
-            <>
-              <Route path="/teacher" component={studentTeacherPage} />
-              <Route
-                path="/course"
-                component={isTeacher ? teacherCoursesPage : studentCoursesPage}
-              />
-            </>
-          )}
-          {isAdmin && (
-            <>
+      {isAdmin && (
+        <>
+          <Navbar />
+          <Sidebar />
+          <MainContainer>
+            <Breadcrumbs />
+            <Switch>
               <Route exact path="/" component={adminPage} />
               <Route path="/major" component={MajorPage} />
               <Route path="/class" component={ClassPage} />
               <Route path="/teacher" component={TeacherPage} />
               <Route path="/student" component={StudentPage} />
               <Route exact path="/password" component={PasswordPage} />
-            </>
-          )}
-        </Switch>
-      </MainContainer>
-      {/* </Router> */}
+            </Switch>
+          </MainContainer>
+        </>
+      )}
+      {isTeacher && (
+        <>
+          <TeacherNavbar />
+          <TeacherSidebar />
+          <Route exact path="/" component={teacherPage} />
+          <Route path="/course" component={teacherCoursesPage} />
+        </>
+      )}
     </>
   );
 
   return (
-    // <div className={classes.root}>
     <>
-      {/* <Router history={history} forceRefresh={true}> */}
       <Router history={history}>
-        <Notification />
         <Switch>
           <Route exact path="/sign-in" component={signin} />
           <Route exact path="/sign-up" component={signup} />
@@ -89,7 +86,6 @@ function App() {
         </Switch>
       </Router>
     </>
-    // </div>
   );
 }
 

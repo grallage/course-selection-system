@@ -31,4 +31,7 @@ yarn add @material-ui/pickers
 # yarn add @date-io/date-fns
 yarn add @date-io/date-fns@1.x date-fns
 yarn add history
+yarn add react-bootstrap bootstrap@4.6.0
+yarn add react-dual-listbox
+yarn add react-datepicker
 ```
