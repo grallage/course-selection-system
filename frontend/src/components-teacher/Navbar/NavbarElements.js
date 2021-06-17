@@ -1,13 +1,5 @@
 import styled from "styled-components/macro";
-
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  Form,
-  FormControl,
-  Button,
-} from "react-bootstrap";
+import { Navbar } from "react-bootstrap";
 
 const DEFAULT_WIDTH = "250px";
 
@@ -24,8 +16,12 @@ export const NavbarContainer = styled(Navbar)`
   color: #1f2d3d;
   transition: width 1000ms ease, margin-left 1000ms ease;
   border-bottom: 1px solid #dee2e6;
-  max-height: 57px;
+  // max-height: 57px;
   z-index: 999;
+
+  & .nav-link.navbar-text{
+    cursor: pointer;
+  }
   `}
 `;
 

@@ -1,18 +1,21 @@
 from django.shortcuts import render
 from django.db.models import Q
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth import logout as auth_logout
+
 from rest_framework import viewsets, permissions, urls, status
 from rest_framework.filters import OrderingFilter
-from django.contrib.auth.models import AnonymousUser
+from rest_framework import generics, mixins
 
+
+from django_filters.rest_framework import DjangoFilterBackend
 
 from ..serializers import teacher_serializers as serializers
 from ..filters import teacher_filters as filters
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, mixins
-import logging
 from .. import models
 
-from django.contrib.auth import logout as auth_logout
+import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -58,11 +61,6 @@ class CourseViewSet(viewsets.ModelViewSet):
         return queryset.filter(teacher__user__id=user.id)
 
 
-# class CourseViewSet(viewsets.ModelViewSet):
-#     queryset = models.Course.objects.all()
-#     serializer_class = serializers.CourseSerializer
-
-
 class CourseScheduleViewSet(viewsets.ModelViewSet):
     permission_classes = [TeacherPermission]
     queryset = models.CourseSchedule.objects.all()
@@ -88,3 +86,36 @@ class CourseScheduleViewSet(viewsets.ModelViewSet):
             ).distinct()
 
         return queryset.filter(teacher__user__id=user.id)
+
+
+class TeacherViewSet(
+    mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
+):
+    permission_classes = [TeacherPermission]
+    queryset = models.Teacher.objects.all()
+    serializer_class = serializers.TeacherSerializer
+
+
+class StudentCourseViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
+    permission_classes = [TeacherPermission]
+    queryset = models.StudentCourse.objects.all()
+    serializer_class = serializers.StudentCourseSerializer
+
+    def get_queryset(self):
+        course_id = int(self.request.GET.get("course_id", -1))
+        user = self.request.user
+        queryset = super().get_queryset()
+
+        if course_id > 0:
+            return queryset.filter(
+                course__id=course_id,
+                course__teacher__user__id=user.id,
+            )
+
+        # return queryset.filter(course__teacher=user.id)
+        return queryset.filter(course__teacher__user__id=user.id)

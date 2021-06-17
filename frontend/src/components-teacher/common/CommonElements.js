@@ -1,7 +1,10 @@
 import styled from "styled-components/macro";
 import { Link as LinkR } from "react-router-dom";
-import { Card as CardB } from "react-bootstrap";
-import { Container } from "react-bootstrap";
+import {
+  Container,
+  Breadcrumb as BreadcrumbB,
+  Card as CardB,
+} from "react-bootstrap";
 
 // datepicker
 import DatePickerR from "react-datepicker";
@@ -49,5 +52,11 @@ export const SearchContainer = styled(Container)`
   & .col.end {
     display: flex;
     justify-content: flex-end;
+  }
+`;
+
+export const Breadcrumb = styled(BreadcrumbB)`
+  & .breadcrumb {
+    background-color: inherit;
   }
 `;

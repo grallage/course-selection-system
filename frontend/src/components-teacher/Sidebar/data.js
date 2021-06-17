@@ -5,7 +5,7 @@ export const teacherLinks = [
     links: [
       {
         name: "基本信息",
-        url: "/user",
+        url: "/personal-info",
         type: "link",
       },
       {
@@ -29,6 +29,22 @@ export const teacherLinks = [
         url: "/schedule",
         type: "link",
       },
+    ],
+  },
+  {
+    name: "学生管理",
+    type: "header",
+    links: [
+      {
+        name: "成绩管理",
+        url: "/student-scores",
+        type: "link",
+      },
+      // {
+      //   name: "成绩统计",
+      //   url: "/student-scores-statistics",
+      //   type: "link",
+      // },
     ],
   },
 ];

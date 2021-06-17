@@ -8,28 +8,40 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+
+import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
+import { MainContainer } from "./components/commom/CommonElements";
+// import Notification from "./components/Notification/Notification";
+// import AlertDialog from "./components/Alerts/Alerts";
+
+import studentTeacherPage from "./pages/student/teacher/teachers";
+import studentCoursesPage from "./pages/student/course/courses";
+
+// page
+import signin from "./pages/login/Signin";
+import signup from "./pages/login/Signup";
+
+// admin page
 import ClassPage from "./pages/admin/class/ClassPage";
 import TeacherPage from "./pages/admin/teacher/TeacherPage";
 import StudentPage from "./pages/admin/student/StudentPage";
 import MajorPage from "./pages/admin/major/MajorPage";
-import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
-import { MainContainer } from "./components/commom/CommonElements";
-import Notification from "./components/Notification/Notification";
-import AlertDialog from "./components/Alerts/Alerts";
 import PasswordPage from "./pages/admin/password/PasswordPage";
 
-// page
-import studentTeacherPage from "./pages/student/teacher/teachers";
-import studentCoursesPage from "./pages/student/course/courses";
+// teacher page
+import { Main as TeacherMainContainer } from "components-teacher/common/CommonElements";
 import teacherCoursesPage from "./pages/teacher/course/CoursePage";
 import teacherSchedulePage from "./pages/teacher/schedule/SchedulePage";
-import adminPage from "./pages/admin/index";
-import signin from "./pages/login/Signin";
-import signup from "./pages/login/Signup";
+import teacherPasswordPage from "./pages/teacher/password/PasswordPage";
+import PersonalInfoPage from "./pages/teacher/personal-info/PersonalInfoPage";
+import StudentScoresPage from "./pages/teacher/student-scores/StudentScoresPage";
 import teacherPage from "./pages/teacher/index";
 import TeacherNavbar from "./components-teacher/Navbar/Navbar";
 import TeacherSidebar from "./components-teacher/Sidebar/Sidebar";
+import TeacherBreadcrumbs from "./components-teacher/Breadcrumbs/Breadcrumbs";
+
+import adminPage from "./pages/admin/index";
 
 // css
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -42,10 +54,15 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const user = useSelector((state) => state.user.user);
-  const isTeacher = user ? user.is_teacher : false;
-  const isStudent = user ? user.is_student : false;
-  const isAdmin = user ? user.is_admin : false;
+  const isTeacher = useSelector((state) =>
+    state.user.user ? state.user.user.is_teacher : false
+  );
+  const isStudent = useSelector((state) =>
+    state.user.user ? state.user.user.is_student : false
+  );
+  const isAdmin = useSelector((state) =>
+    state.user.user ? state.user.user.is_admin : false
+  );
 
   const UserPages = () => (
     <>
@@ -70,9 +87,15 @@ function App() {
         <>
           <TeacherNavbar />
           <TeacherSidebar />
-          <Route exact path="/" component={teacherPage} />
-          <Route path="/course" component={teacherCoursesPage} />
-          <Route path="/schedule" component={teacherSchedulePage} />
+          <TeacherMainContainer>
+            <TeacherBreadcrumbs />
+            <Route exact path="/" component={teacherPage} />
+            <Route path="/course" component={teacherCoursesPage} />
+            <Route path="/schedule" component={teacherSchedulePage} />
+            <Route path="/password" component={teacherPasswordPage} />
+            <Route path="/student-scores" component={StudentScoresPage} />
+            <Route path="/personal-info" component={PersonalInfoPage} />
+          </TeacherMainContainer>
         </>
       )}
     </>

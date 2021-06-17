@@ -11,10 +11,45 @@ import logging, datetime
 logger = logging.getLogger(__name__)
 
 
+class UserSerializer(serializers.ModelSerializer):
+    email = serializers.ReadOnlyField()
+    full_name = serializers.ReadOnlyField()
+    is_student = serializers.ReadOnlyField()
+    is_admin = serializers.ReadOnlyField()
+    is_teacher = serializers.ReadOnlyField()
+    is_active = serializers.ReadOnlyField()
+
+    class Meta:
+        model = models.User
+        # fields = "__all__"
+        exclude = ["password"]
+
+
 class TeacherSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    code = serializers.ReadOnlyField()
+
     class Meta:
         model = models.Teacher
         fields = "__all__"
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        # user
+        user = validated_data.pop("user")
+        # id = request.parser_context.get("kwargs").get("pk", -1)
+        userSerializer = UserSerializer(
+            models.User.objects.get(pk=instance.user.id), user
+        )
+        userSerializer.is_valid(raise_exception=True)
+        userSerializer.save()
+
+        # teacher
+        instance.office = validated_data.get("office", instance.office)
+        instance.domain = validated_data.get("domain", instance.domain)
+        instance.save()
+
+        return instance
 
 
 class ClassInfoSerializer(serializers.ModelSerializer):
@@ -38,12 +73,9 @@ class CourseEditSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Course
-        # fields = "__all__"
         exclude = ["teacher", "class_info", "students"]
 
     def validate(self, attrs):
-        logger.info("########## validate")
-        logger.info(attrs)
         request = self.context.get("request")
         errors = {}
         if request.method == "PUT" or request.method == "DELETE":
@@ -85,11 +117,6 @@ class CourseEditSerializer(serializers.ModelSerializer):
             course = super().create(validated_data)
 
             return course
-        # return super().create(validated_data)
-
-    @transaction.atomic
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
 
 
 class CourseScheduleSerializer(serializers.ModelSerializer):
@@ -144,9 +171,39 @@ class CourseScheduleSerializer(serializers.ModelSerializer):
                     ).count()
                     if count > 0:
                         errors["detail"] = "该班级已被其他教师占用授课"
-        logger.info(errors)
 
         if errors:
             raise serializers.ValidationError(errors)
 
         return super().validate(attrs)
+
+
+class StudentCourseSerializer(serializers.ModelSerializer):
+    student_name = serializers.CharField(
+        read_only=True, source="student.user.full_name"
+    )
+    student_code = serializers.CharField(read_only=True, source="student.code")
+    student_sex = serializers.CharField(read_only=True, source="student.user.sex")
+    student_class_name = serializers.CharField(
+        read_only=True, source="student.class_info.name"
+    )
+    student_comment = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = models.StudentCourse
+        # exclude = []
+        fields = (
+            "id",
+            "student_name",
+            "student_code",
+            "student_sex",
+            "student_class_name",
+            "student_comment",
+            "student_grade1",
+            "student_grade2",
+            "student_grade3",
+            "grade",
+            "credit",
+            "comment",
+            "grade_result",
+        )

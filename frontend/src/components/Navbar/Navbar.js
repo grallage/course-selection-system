@@ -33,7 +33,8 @@ import NavbarUserInfoAlert from "./NavbarUserAlert";
 import { useDialog } from "../../providers/DialogProvider";
 
 const Navbar = () => {
-  const user = useSelector((state) => state.user.user);
+  const is_admin = useSelector((state) => state.user.user.is_admin);
+  const is_teacher = useSelector((state) => state.user.user.is_teacher);
   const sidebar = useSelector((state) => state.sidebar);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -127,9 +128,9 @@ const Navbar = () => {
           <ToolbarTitle>
             <ToolbarLink to="/">
               学生选课系统 -
-              {user.is_admin
+              {is_admin
                 ? " 管理员后台"
-                : user.is_teacher
+                : is_teacher
                 ? " 教师后台"
                 : " 学生后台"}
             </ToolbarLink>

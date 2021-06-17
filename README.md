@@ -36,5 +36,7 @@ yarn add react-dual-listbox
 yarn add react-datepicker
 yarn add react-select
 yarn add react-switch
+yarn add react-bootstrap-table-next
+yarn add react-bootstrap-table2-editor
 
 ```

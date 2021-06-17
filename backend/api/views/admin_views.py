@@ -31,6 +31,16 @@ class AdminPermission(permissions.BasePermission):
         return True
 
 
+class UserPermission(permissions.BasePermission):
+    message = "权限不足"
+
+    def has_permission(self, request, view):
+        user = request.user
+        if isinstance(user, AnonymousUser):
+            return False
+        return True
+
+
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [AdminPermission]
     queryset = models.User.objects.all()
@@ -149,7 +159,7 @@ class StudentCourseViewSet(viewsets.ModelViewSet):
 
 
 class PasswordView(UpdateAPIView):
-    permission_classes = [AdminPermission]
+    permission_classes = [UserPermission]
     serializer_class = serializers.PasswordSerializer
     model = models.User
     queryset = models.User.objects.all()

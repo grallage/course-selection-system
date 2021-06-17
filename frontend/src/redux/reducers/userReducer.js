@@ -14,6 +14,14 @@ const userReducer = (state = initialState, action) => {
         ...state,
         user: action.payload,
       };
+    case "update_user":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+      };
     case "remove_user":
       return {
         ...state,

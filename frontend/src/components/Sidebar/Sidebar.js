@@ -29,12 +29,14 @@ export default function Sidebar() {
   const sidebar = useSelector((state) => state.sidebar);
   const dispatch = useDispatch();
   const theme = useTheme();
-  const user = useSelector((state) => state.user.user);
-  const dataList = user.is_admin
+  const is_teacher = useSelector((state) => state.user.user.is_teacher);
+  const is_student = useSelector((state) => state.user.user.is_student);
+  const is_admin = useSelector((state) => state.user.user.is_admin);
+  const dataList = is_admin
     ? admininks
-    : user.is_teacher
+    : is_teacher
     ? teacherLinks
-    : user.is_student
+    : is_student
     ? studentLinks
     : [];
 

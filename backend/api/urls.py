@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework import routers
 from .views import admin_views, teacher_views, views
 
-
+# admin
 router = routers.DefaultRouter()
 router.register(r"user", admin_views.UserViewSet)
 router.register(r"teacher", admin_views.TeacherViewSet)
@@ -14,10 +14,13 @@ router.register(r"course", admin_views.CourseViewSet)
 router.register(r"course-schedule", admin_views.CourseScheduleViewSet)
 router.register(r"student-course", admin_views.StudentCourseViewSet)
 
+# teacher
 teacher_router = routers.DefaultRouter()
 teacher_router.register(r"class", teacher_views.ClassInfoViewSet)
 teacher_router.register(r"course", teacher_views.CourseViewSet)
 teacher_router.register(r"course-schedule", teacher_views.CourseScheduleViewSet)
+teacher_router.register(r"teacher", teacher_views.TeacherViewSet)
+teacher_router.register(r"student-course", teacher_views.StudentCourseViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
