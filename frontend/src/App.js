@@ -1,28 +1,24 @@
-import "./App.css";
-import history from "./service/history";
-//
 import React from "react";
-import Navbar from "./components/Navbar/Navbar";
-import Sidebar from "./components/Sidebar/Sidebar";
+import { useSelector } from "react-redux";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import history from "./service/history";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
-import { useSelector } from "react-redux";
-
-import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
 import { MainContainer } from "./components/commom/CommonElements";
 // import Notification from "./components/Notification/Notification";
 // import AlertDialog from "./components/Alerts/Alerts";
+// import studentTeacherPage from "./pages/student/teacher/teachers";
+// import studentCoursesPage from "./pages/student/course/courses";
 
-import studentTeacherPage from "./pages/student/teacher/teachers";
-import studentCoursesPage from "./pages/student/course/courses";
-
-// page
+// login logout page
 import signin from "./pages/login/Signin";
 import signup from "./pages/login/Signup";
 
 // admin page
+import Navbar from "./components/Navbar/Navbar";
+import Sidebar from "./components/Sidebar/Sidebar";
+import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
+import adminPage from "./pages/admin/index";
 import ClassPage from "./pages/admin/class/ClassPage";
 import TeacherPage from "./pages/admin/teacher/TeacherPage";
 import StudentPage from "./pages/admin/student/StudentPage";
@@ -31,19 +27,28 @@ import PasswordPage from "./pages/admin/password/PasswordPage";
 
 // teacher page
 import { Main as TeacherMainContainer } from "components-teacher/common/CommonElements";
+import TeacherNavbar from "./components-teacher/Navbar/Navbar";
+import TeacherSidebar from "./components-teacher/Sidebar/Sidebar";
 import teacherCoursesPage from "./pages/teacher/course/CoursePage";
 import teacherSchedulePage from "./pages/teacher/schedule/SchedulePage";
 import teacherPasswordPage from "./pages/teacher/password/PasswordPage";
 import PersonalInfoPage from "./pages/teacher/personal-info/PersonalInfoPage";
 import StudentScoresPage from "./pages/teacher/student-scores/StudentScoresPage";
 import teacherPage from "./pages/teacher/index";
-import TeacherNavbar from "./components-teacher/Navbar/Navbar";
-import TeacherSidebar from "./components-teacher/Sidebar/Sidebar";
 import TeacherBreadcrumbs from "./components-teacher/Breadcrumbs/Breadcrumbs";
 
-import adminPage from "./pages/admin/index";
+// student page
+import { Main as StudentMainContainer } from "components-student/common/CommonElements";
+import StudentNavbar from "./components-student/Navbar/Navbar";
+import StudentBreadcrumbs from "./components-student/Breadcrumbs/Breadcrumbs";
+import studentPage from "./pages/student/index";
+import studentPersonalInfoPage from "./pages/student/personal-info/PersonalInfoPage";
+import studentPasswordPage from "./pages/student/password/PasswordPage";
+import studentSchedulePage from "./pages/student/schedule/SchedulePage";
+import studentCoursesPage from "./pages/student/course/CoursePage";
 
 // css
+import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -96,6 +101,19 @@ function App() {
             <Route path="/student-scores" component={StudentScoresPage} />
             <Route path="/personal-info" component={PersonalInfoPage} />
           </TeacherMainContainer>
+        </>
+      )}
+      {isStudent && (
+        <>
+          <StudentNavbar />
+          <StudentMainContainer>
+            <StudentBreadcrumbs />
+            <Route exact path="/" component={studentPage} />
+            <Route path="/password" component={studentPasswordPage} />
+            <Route path="/personal-info" component={studentPersonalInfoPage} />
+            <Route path="/schedule" component={studentSchedulePage} />
+            <Route path="/course" component={studentCoursesPage} />
+          </StudentMainContainer>
         </>
       )}
     </>

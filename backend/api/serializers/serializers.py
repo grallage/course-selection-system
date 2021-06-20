@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
-from django.db.models import fields
+from django.db.models import fields, Max
 from rest_framework.fields import ReadOnlyField
+from django.db import transaction
 from .. import models
 from rest_framework import serializers
 import logging
@@ -34,6 +35,7 @@ class TeacherSerializer(serializers.ModelSerializer):
         model = models.Teacher
         fields = "__all__"
 
+    @transaction.atomic
     def create(self, validated_data):
         # user
         user_params = validated_data.pop("user")
@@ -112,6 +114,7 @@ class TeacherEditSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(errors)
         return validated_attrs
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         # user
         user = validated_data.pop("user")
@@ -160,6 +163,7 @@ class StudentSerializer(serializers.ModelSerializer):
         model = models.Student
         fields = "__all__"
 
+    @transaction.atomic
     def create(self, validated_data):
         # user
         user_params = validated_data.pop("user")
@@ -172,6 +176,14 @@ class StudentSerializer(serializers.ModelSerializer):
         classId = validated_data.pop("class_info__id")
         class_info = models.ClassInfo.objects.get(pk=int(classId))
         class_student_count = str(class_info.students.count() + 1)
+
+        # 最大学号加一
+        if int(class_student_count) > 1:
+            class_student_count = str(
+                int(class_info.students.aggregate(Max("code")).get("code__max")[-3:])
+                + 1
+            )
+
         code = (
             str(user.created_at.year)
             + str(class_info.id).zfill(4)
@@ -182,6 +194,12 @@ class StudentSerializer(serializers.ModelSerializer):
             user=user, code=code, class_info=class_info, **validated_data
         )
         student.save()
+
+        # add courses
+        courseList = models.Course.objects.filter(class_info=class_info)
+        for course in courseList:
+            models.StudentCourse(student=student, course=course).save()
+
         return student
 
 

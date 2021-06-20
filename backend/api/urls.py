@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from .views import admin_views, teacher_views, views
+from .views import admin_views, teacher_views, views, student_views
 
 # admin
 router = routers.DefaultRouter()
@@ -22,9 +22,17 @@ teacher_router.register(r"course-schedule", teacher_views.CourseScheduleViewSet)
 teacher_router.register(r"teacher", teacher_views.TeacherViewSet)
 teacher_router.register(r"student-course", teacher_views.StudentCourseViewSet)
 
+# student
+student_router = routers.DefaultRouter()
+student_router.register(r"student", student_views.StudentViewSet)
+student_router.register(r"student-course", student_views.StudentCourseViewSet)
+student_router.register(r"course-schedule", student_views.CourseScheduleViewSet)
+student_router.register(r"course", student_views.CourseViewSet)
+
 urlpatterns = [
     path("", include(router.urls)),
     path("t/", include(teacher_router.urls)),
+    path("s/", include(student_router.urls)),
     path(
         "password/<int:pk>/", admin_views.PasswordView.as_view(), name="change_password"
     ),
