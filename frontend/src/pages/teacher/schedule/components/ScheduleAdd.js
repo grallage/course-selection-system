@@ -3,8 +3,8 @@ import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router";
 
-import { Card, DatePicker } from "components-teacher/common/CommonElements";
-import { Button, Form, Col, Row } from "react-bootstrap";
+import { Card } from "components-teacher/common/CommonElements";
+import { Button, Form } from "react-bootstrap";
 import Select from "react-select";
 
 import { useFormControls } from "./ScheduleFormControls";

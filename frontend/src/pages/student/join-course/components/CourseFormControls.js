@@ -104,8 +104,6 @@ export const useFormControls = () => {
       tempErrors.book = fieldValues.book ? "" : "请填写该字段";
     }
     if (formValues.formType === "create" && formValues.is_compulsory) {
-      // console.log(fieldValues.classes);
-
       tempErrors.student_limit = "";
       tempErrors.deadline = "";
       if ("classes" in fieldValues) {
@@ -118,7 +116,6 @@ export const useFormControls = () => {
     } else if (!formValues.is_compulsory) {
       tempErrors.classes = "";
     }
-    // console.log(tempErrors);
 
     setErrors({
       ...tempErrors,

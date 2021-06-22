@@ -10,8 +10,6 @@ import MajorForm from "./components/MajorForm";
 import MajorList from "./components/MajorList";
 
 function MajorPage() {
-  // const location = useLocation();
-
   return (
     <main>
       <PageContainer maxWidth="lg">

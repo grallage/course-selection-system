@@ -39,7 +39,7 @@ function createData({ id, name, year, created_at, modified_at, major }) {
 
 const ClassList = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [name, setName] = React.useState("");
   const [majorName, setMajorName] = React.useState("");
 

@@ -49,7 +49,7 @@ function createData({
 const MajorList = () => {
   const token = useSelector((state) => state.user.token);
   const { enqueueSnackbar } = useSnackbar();
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [name, setName] = React.useState("");
   const [desc, setDesc] = React.useState("");
   const [page, setPage] = React.useState(0);
@@ -229,11 +229,9 @@ const MajorList = () => {
                       >
                         <LinkWrapper>
                           <CommonLink to={`/major/edit/${row.id}/`}>
-                            {/* <CommonLink to={`/major/edit/${row.id}/`}> */}
                             <Icon>
                               <AiFillEdit />
                             </Icon>
-                            {/* </CommonLink> */}
                           </CommonLink>
                         </LinkWrapper>
                         {/* <LinkWrapper onClick={() => handleDelete(row.id)}> */}

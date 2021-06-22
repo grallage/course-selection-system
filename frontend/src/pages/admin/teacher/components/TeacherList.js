@@ -106,7 +106,7 @@ const TeacherList = () => {
   const handleDelete = (teacher) => {
     const id = teacher.user.id;
     let url = `${process.env.REACT_APP_TEACHER_API}${id}/`;
-    console.log(url);
+
     axios
       .delete(url, {
         headers: {
@@ -193,13 +193,11 @@ const TeacherList = () => {
           >
             <SearchIcon />
           </IconButton>
-          {/* <CommonLink to="/teacher/create"> */}
+
           <LinkWrapper onClick={() => openCreateDialog()}>
-            {/* <CommonLink > */}
             <IconButton type="button" aria-label="create">
               <AddCircleOutlineIcon />
             </IconButton>
-            {/* </CommonLink> */}
           </LinkWrapper>
         </MainSearchForm>
         {/* </Paper> */}
@@ -247,13 +245,11 @@ const TeacherList = () => {
 
                         <LinkWrapper onClick={() => openEditDialog(row)}>
                           {/* <CommonLink to={`/teacher/edit/${row.id}/`}> */}
-                          {/* <CommonLink to={`/teacher/edit/${row.id}/`}> */}
                           <Link variant="button">
                             <Icon>
                               <AiFillEdit />
                             </Icon>
                           </Link>
-                          {/* </CommonLink> */}
                           {/* </CommonLink> */}
                         </LinkWrapper>
                         {/* <LinkWrapper onClick={() => handleDelete(row.id)}> */}

@@ -4,19 +4,10 @@ import { useSnackbar } from "notistack";
 import { useLocation } from "react-router-dom";
 import { useModal } from "providers/DialogBootstrapProvider";
 
-import {
-  Table,
-  Container,
-  Row,
-  Col,
-  Form,
-  ButtonGroup,
-  Button,
-} from "react-bootstrap";
+import { Table, Row, Col, Form, ButtonGroup, Button } from "react-bootstrap";
 import {
   Card,
   SearchContainer,
-  Link,
 } from "components-teacher/common/CommonElements";
 import Pagination from "components-teacher/Pagination/Pagination";
 import CourseDetailAlert from "./CourseDetailAlert";
@@ -82,7 +73,6 @@ const CourseList = () => {
       event.preventDefault();
     }
 
-    // let url = process.env.REACT_APP_STUDENT_STUDENT_COURSE_API;
     let url = process.env.REACT_APP_STUDENT_COURSE_API;
 
     return axios

@@ -53,11 +53,9 @@ const PostForm = async (values, successCallback, errorCallback) => {
     data: form,
   })
     .then((response) => {
-      console.log(response);
       return response.data;
     })
     .then((json) => {
-      console.log(json);
       successCallback();
       return true;
     })
@@ -74,7 +72,6 @@ export const useFormControls = () => {
 
   const validate = (fieldValues = formValues) => {
     let tempErrors = { ...errors };
-    // console.log(fieldValues);
 
     //
     if ("title" in fieldValues) {
@@ -106,8 +103,6 @@ export const useFormControls = () => {
       tempErrors.book = fieldValues.book ? "" : "请填写该字段";
     }
     if (formValues.formType === "create" && formValues.is_compulsory) {
-      // console.log(fieldValues.classes);
-
       tempErrors.student_limit = "";
       tempErrors.deadline = "";
       if ("classes" in fieldValues) {
@@ -120,7 +115,6 @@ export const useFormControls = () => {
     } else if (!formValues.is_compulsory) {
       tempErrors.classes = "";
     }
-    // console.log(tempErrors);
 
     setErrors({
       ...tempErrors,

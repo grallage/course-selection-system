@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import history from "./service/history";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { MainContainer } from "./components/commom/CommonElements";
 // import Notification from "./components/Notification/Notification";
@@ -46,6 +46,7 @@ import studentPersonalInfoPage from "./pages/student/personal-info/PersonalInfoP
 import studentPasswordPage from "./pages/student/password/PasswordPage";
 import studentSchedulePage from "./pages/student/schedule/SchedulePage";
 import studentCoursesPage from "./pages/student/course/CoursePage";
+import studentJoinCoursePage from "./pages/student/join-course/JoinCoursePage";
 
 // css
 import "./App.css";
@@ -113,6 +114,7 @@ function App() {
             <Route path="/personal-info" component={studentPersonalInfoPage} />
             <Route path="/schedule" component={studentSchedulePage} />
             <Route path="/course" component={studentCoursesPage} />
+            <Route path="/course-join" component={studentJoinCoursePage} />
           </StudentMainContainer>
         </>
       )}

@@ -5,7 +5,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  DialogContentText,
   TextField,
   Card,
   Grid,
@@ -20,7 +19,7 @@ import { useFormControls } from "./TeacherFormControls";
 import { SwitchLabel } from "../../major/components/MajorFormElements";
 
 function TeacherEditAlert({ teacher, type, getTeacherList }) {
-  const { createDialog, closeDialog } = useDialog();
+  const { closeDialog } = useDialog();
   const {
     formValues,
     setFormValues,

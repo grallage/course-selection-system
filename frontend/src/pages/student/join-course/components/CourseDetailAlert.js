@@ -4,7 +4,7 @@ import { useModal } from "providers/DialogBootstrapProvider";
 
 function CourseDetailAlert({ course }) {
   const { closeModal } = useModal();
-
+  console.log(course);
   return (
     <>
       <Modal.Header closeButton>

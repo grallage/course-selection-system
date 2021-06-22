@@ -11,7 +11,7 @@ const SchedulePage = () => {
           path="/schedule/add"
           component={() => <ScheduleAdd type="create" />}
         />
-        {/* <Route path="/schedule/add" component={ScheduleTable} /> */}
+
         <Route path="/schedule" component={ScheduleTable} />
       </Switch>
     </>

@@ -38,12 +38,10 @@ const PostForm = async (values, successCallback, errorCallback) => {
 export const useFormControls = () => {
   const [formValues, setFormValues] = React.useState(initialFormValues);
   const [errors, setErrors] = React.useState({});
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const validate = (fieldValues = formValues) => {
     let tempErrors = { ...errors };
-
-    //
 
     if ("address" in fieldValues) {
       tempErrors.address = fieldValues.address ? "" : "请填写该字段";

@@ -1,4 +1,4 @@
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import axios from "axios";
 
 import React, { useState, useEffect } from "react";
@@ -6,8 +6,8 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+// import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -19,14 +19,15 @@ import Container from "@material-ui/core/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AddToken, AddUser } from "../../redux/actions/userAction";
-// import history from "../../service/history";
+
+import { useSnackbar } from "notistack";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        Lynn Demo Website
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -56,11 +57,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-
   const dispatch = useDispatch();
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
+
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
+  const hasLogin = useSelector((state) =>
+    state.user.token && state.user && state.user.user && state.user.user.id
+      ? true
+      : false
+  );
+
+  useEffect(() => {
+    if (hasLogin) {
+      history.push("/");
+    }
+  }, []);
 
   const handleChange = (event) => {
     if (event.target.name === "email") {
@@ -69,6 +82,21 @@ export default function SignIn() {
     if (event.target.name === "pwd") {
       setPwd(event.target.value);
     }
+  };
+
+  const valid = () => {
+    if (email.trim() === "") {
+      enqueueSnackbar("邮箱地址不能空", {
+        variant: "error",
+      });
+      return false;
+    } else if (pwd.trim() === "") {
+      enqueueSnackbar("密码不能空", {
+        variant: "error",
+      });
+      return false;
+    }
+    return true;
   };
 
   const getUserMsg = async () => {
@@ -95,17 +123,22 @@ export default function SignIn() {
         return user;
       })
       .catch((error) => {
-        console.log("錯誤");
         console.log(error.response);
-        console.log("账号或密码错误");
+        enqueueSnackbar("获取用户信息失败", {
+          variant: "error",
+        });
         return {};
       });
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
 
-    console.log("登录！");
+    if (!valid()) {
+      return;
+    }
 
     let url = process.env.REACT_APP_LOGIN_API;
     let form = new FormData();
@@ -116,8 +149,7 @@ export default function SignIn() {
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios.defaults.withCredentials = true;
 
-    var csrfCookie = Cookies.get("csrftoken");
-    // console.log(csrfCookie);
+    // var csrfCookie = Cookies.get("csrftoken");
 
     const result = await axios
       .post(url, form, {
@@ -138,9 +170,10 @@ export default function SignIn() {
         return true;
       })
       .catch((error) => {
-        console.log("錯誤");
         console.log(error.response);
-        console.log("账号或密码错误");
+        enqueueSnackbar("账号或密码错误", {
+          variant: "error",
+        });
         return false;
       });
     if (result) {
@@ -186,10 +219,10 @@ export default function SignIn() {
             autoComplete="current-password"
             onChange={handleChange}
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="记住我"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
@@ -199,7 +232,7 @@ export default function SignIn() {
           >
             登录
           </Button>
-          <Grid container>
+          {/* <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
                 忘记密码？
@@ -210,7 +243,7 @@ export default function SignIn() {
                 {"注册管理员账号"}
               </Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </form>
       </div>
       <Box mt={8}>

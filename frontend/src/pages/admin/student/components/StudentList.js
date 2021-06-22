@@ -3,7 +3,7 @@ import axios from "service/axiosConfig";
 
 import { useSnackbar } from "notistack";
 import { useLocation } from "react-router-dom";
-import queryString from "query-string";
+// import queryString from "query-string";
 
 import Link from "@material-ui/core/Link";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -43,14 +43,14 @@ const initialSearchForm = {
 
 const StudentList = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchForm, setSearchForm] = React.useState(initialSearchForm);
 
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
   const [count, setCount] = React.useState(0);
   const [students, setStudents] = React.useState([]);
-  const location = useLocation();
+  // const location = useLocation();
 
   const { createDialog } = useDialog();
 
@@ -60,7 +60,7 @@ const StudentList = () => {
   };
 
   useEffect(() => {
-    const parsed = queryString.parse(location.search);
+    // const parsed = queryString.parse(location.search);
     getStudentList();
   }, [page, pageSize]);
 

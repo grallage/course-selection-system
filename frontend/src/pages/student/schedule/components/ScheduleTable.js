@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
-import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
-import Switch from "react-switch";
+// import { useHistory } from "react-router";
+// import { useSelector } from "react-redux";
 
 import { Row, Col } from "react-bootstrap";
-import {
-  Card,
-  SearchContainer,
-} from "components-teacher/common/CommonElements";
+import { Card } from "components-teacher/common/CommonElements";
 
 import {
   ScheduleContainer,
@@ -18,10 +14,8 @@ import {
   ScheduleTh,
   ScheduleBody,
   ScheduleTd,
-  AddBtn,
   ClassNameText,
   ScheduleTdWrapper,
-  SwitchLabel,
 } from "./ScheduleElements";
 
 function createCourseData(item) {
@@ -40,9 +34,9 @@ const ScheduleTable = () => {
   const [weeks, setWeeks] = useState([]);
   const [timespans, setTimespans] = useState([]);
   const [courseSchedules, setCourseSchedules] = useState([]);
-  const user = useSelector((state) => state.user.user);
+  // const user = useSelector((state) => state.user.user);
 
-  const history = useHistory();
+  // const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(async () => {
@@ -67,7 +61,6 @@ const ScheduleTable = () => {
     return axios
       .get(url, {})
       .then((response) => {
-        // console.log(response.data);
         return response.data;
       })
       .then((json) => {

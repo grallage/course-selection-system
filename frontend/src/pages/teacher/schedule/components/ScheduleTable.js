@@ -101,13 +101,11 @@ const ScheduleTable = () => {
     return axios
       .get(url, {})
       .then((response) => {
-        // console.log(response.data);
         return response.data;
       })
       .then((json) => {
         setWeeks(json.week_settings);
         setTimespans(json.timespan_settings);
-        console.log(json);
       })
       .catch((error) => {
         const response = error.response;

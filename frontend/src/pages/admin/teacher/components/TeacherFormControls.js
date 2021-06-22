@@ -48,11 +48,11 @@ const PostForm = async (values, successCallback, errorCallback) => {
     data: form,
   })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       return response.data;
     })
     .then((json) => {
-      console.log(json);
+      // console.log(json);
       successCallback();
       return true;
     })

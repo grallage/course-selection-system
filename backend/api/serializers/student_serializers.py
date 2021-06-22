@@ -76,14 +76,7 @@ class CourseSerializer2(serializers.ModelSerializer):
         model = models.Course
         fields = "__all__"
 
-    # def get_likes(self, product):
-    #     qs = Like.objects.filter(whether_like=True, product=product)
-    #     serializer = LikeSerializer(instance=qs, many=True)
-    #     return serializer.data
-
     def get_student_course(self, instance):
-        logger.info("########")
-        logger.info(instance)
         userId = self.context["request"].user.id
         logger.info(instance.id)
 
@@ -111,3 +104,28 @@ class CourseScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CourseSchedule
         fields = "__all__"
+
+
+class ElectiveSubjectSerializer(serializers.ModelSerializer):
+    teacher = TeacherSerializer(read_only=True)
+    courseId = serializers.CharField(write_only=True, allow_blank=True, required=False)
+
+    class Meta:
+        model = models.Course
+        fields = "__all__"
+
+    @transaction.atomic
+    def create(self, validated_data):
+        request = self.context["request"]
+        user = request.user
+        courseId = validated_data.pop("courseId", -1)
+
+        student = models.Student.objects.get(user=user.id)
+        course = models.Course.objects.get(pk=courseId)
+
+        studentCourse = models.StudentCourse.objects.create(
+            student=student,
+            course=course,
+        )
+        studentCourse.save()
+        return course

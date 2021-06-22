@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import { Card, DatePicker } from "components-teacher/common/CommonElements";
-import { Button, Form, Col, Row } from "react-bootstrap";
+import { Card } from "components-teacher/common/CommonElements";
+import { Button, Form } from "react-bootstrap";
 
 import { useFormControls } from "./PasswordFormControls";
 
@@ -10,7 +10,7 @@ function createData(item) {
   return { value: item.id, label: item.name };
 }
 
-const PasswordForm = ({ type }) => {
+const PasswordForm = () => {
   const user = useSelector((state) => state.user.user);
   const token = useSelector((state) => state.user.token);
 

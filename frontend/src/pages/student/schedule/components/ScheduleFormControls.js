@@ -35,11 +35,9 @@ const PostForm = async (values, successCallback, errorCallback) => {
     data: form,
   })
     .then((response) => {
-      console.log(response);
       return response.data;
     })
     .then((json) => {
-      console.log(json);
       successCallback();
       return true;
     })
@@ -57,7 +55,6 @@ export const useFormControls = () => {
 
   const validate = (fieldValues = formValues) => {
     let tempErrors = { ...errors };
-    // console.log(fieldValues);
 
     if ("course" in fieldValues) {
       tempErrors.course =
@@ -69,9 +66,6 @@ export const useFormControls = () => {
     if ("week" in fieldValues) {
       tempErrors.week = fieldValues.week ? "" : "没有选择授课时间";
     }
-
-    console.log(formValues);
-    console.log(errors);
 
     setErrors({
       ...tempErrors,
@@ -90,8 +84,6 @@ export const useFormControls = () => {
   };
 
   const handleCourseValue = (selected) => {
-    console.log(selected);
-
     setFormValues({
       ...formValues,
       course: selected,

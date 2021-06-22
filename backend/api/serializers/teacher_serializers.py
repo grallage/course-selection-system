@@ -92,9 +92,10 @@ class CourseEditSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        logger.info("########## create")
+
         request = self.context.get("request")
         user = request.user
+        logger.info(user.id)
         validated_data["teacher"] = models.Teacher.objects.get(pk=user.id)
 
         logger.info(validated_data)
@@ -135,8 +136,6 @@ class CourseScheduleSerializer(serializers.ModelSerializer):
             return TeacherSerializer(instance=teacher).data
 
     def validate(self, attrs):
-        logger.info("##### attrs")
-        logger.info(attrs)
 
         request = self.context.get("request")
         user = request.user

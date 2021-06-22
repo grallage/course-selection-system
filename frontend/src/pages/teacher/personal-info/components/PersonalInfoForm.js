@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UpdateUser } from "../../../../redux/actions/userAction";
 
 import { Card } from "components-teacher/common/CommonElements";
-import { Button, Form, Col, Row } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 
 import { useFormControls } from "./PersonalInfoFormControls";
 
@@ -80,25 +80,20 @@ const PersonalInfoForm = () => {
       <Card.Body>
         {!isLoading && (
           <Form>
-            {/* <Form.Row> */}
             <Form.Group>
               <Form.Label>姓名</Form.Label>
               <Form.Control type="text" value={teacher.full_name} disabled />
             </Form.Group>
-            {/* </Form.Row> */}
-            {/* <Form.Row> */}
+
             <Form.Group>
               <Form.Label>教师编号</Form.Label>
               <Form.Control type="text" value={teacher.code} disabled />
             </Form.Group>
-            {/* </Form.Row> */}
-            {/* <Form.Row> */}
+
             <Form.Group>
               <Form.Label>邮箱地址</Form.Label>
               <Form.Control type="text" value={teacher.email} disabled />
             </Form.Group>
-            {/* </Form.Row> */}
-            {/* <Form.Row> */}
 
             {/* <Form.Group>
               <Form.Label>性别</Form.Label>
@@ -135,11 +130,8 @@ const PersonalInfoForm = () => {
                 onChange={handleInputValue}
                 disabled
               />
-              {/* </Row> */}
             </Form.Group>
 
-            {/* </Form.Row> */}
-            {/* <Form.Row> */}
             <Form.Group>
               <Form.Label>电话号码</Form.Label>
               <Form.Control
@@ -150,8 +142,7 @@ const PersonalInfoForm = () => {
                 onBlur={handleInputValue}
               />
             </Form.Group>
-            {/* </Form.Row> */}
-            {/* <Form.Row> */}
+
             <Form.Group>
               <Form.Label>住址</Form.Label>
               <Form.Control
@@ -162,8 +153,7 @@ const PersonalInfoForm = () => {
                 onBlur={handleInputValue}
               />
             </Form.Group>
-            {/* </Form.Row> */}
-            {/* <Form.Row> */}
+
             <Form.Group>
               <Form.Label>擅长领域</Form.Label>
               <Form.Control
@@ -175,8 +165,7 @@ const PersonalInfoForm = () => {
                 onBlur={handleInputValue}
               />
             </Form.Group>
-            {/* </Form.Row> */}
-            {/* <Form.Row> */}
+
             <Form.Group>
               <Form.Label>办公室</Form.Label>
               <Form.Control
@@ -188,7 +177,6 @@ const PersonalInfoForm = () => {
                 onBlur={handleInputValue}
               />
             </Form.Group>
-            {/* </Form.Row> */}
 
             <Button
               variant="primary"

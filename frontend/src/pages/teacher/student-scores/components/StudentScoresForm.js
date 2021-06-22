@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
-import { useLocation } from "react-router-dom";
 
 // table
 // https://react-bootstrap-table.github.io/react-bootstrap-table2/storybook/index.html

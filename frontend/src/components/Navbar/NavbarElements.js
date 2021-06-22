@@ -36,6 +36,10 @@ export const ToolbarTitle = styled(Typography)`
 export const ToolbarLink = styled(Link)`
   text-decoration: none;
   color: inherit;
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
 `;
 
 export const ToolbarMiddle = styled.div`

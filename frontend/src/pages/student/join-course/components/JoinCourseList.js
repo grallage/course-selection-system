@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
-// import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useModal } from "providers/DialogBootstrapProvider";
+import { useSelector } from "react-redux";
 
 import {
   Table,
@@ -16,31 +17,30 @@ import {
 import {
   Card,
   SearchContainer,
-  Link,
 } from "components-teacher/common/CommonElements";
 import Pagination from "components-teacher/Pagination/Pagination";
-import CourseDeleteAlert from "./CourseDeleteAlert";
+import CourseDetailAlert from "./CourseDetailAlert";
 
-function createData({
-  id,
-  title,
-  teacher,
-  class_info,
-  is_compulsory,
-  credit,
-  student_limit,
-  deadline,
-}) {
-  // const class_name = class_info.name;
+function createData(item) {
   return {
-    id,
-    title,
-    teacher,
-    class_info,
-    is_compulsory,
-    credit,
-    student_limit,
-    deadline,
+    // teacher
+    teacher_id: item.teacher.user.id,
+    teacher_name: item.teacher.user.full_name,
+    // course
+    title: item.title,
+    book: item.book,
+    credit: item.credit,
+    deadline: item.deadline,
+    endtime: item.endtime,
+    evaluation_standard: item.evaluation_standard,
+    id: item.id,
+    is_compulsory: item.is_compulsory,
+    outline: item.outline,
+    student_limit: item.student_limit,
+    deadline: item.deadline,
+    // students_count: item.students.length,
+    students: item.students,
+    // has_join: item.students,
   };
 }
 
@@ -58,6 +58,7 @@ const CourseList = () => {
   const { enqueueSnackbar } = useSnackbar();
   // const location = useLocation();
   const { createModal } = useModal();
+  const userId = useSelector((state) => state.user.user.id);
 
   useEffect(() => {
     getCourseList();
@@ -77,7 +78,7 @@ const CourseList = () => {
       event.preventDefault();
     }
 
-    let url = process.env.REACT_APP_TEACHER_COURSE_API;
+    let url = process.env.REACT_APP_STUDENT_ELECTIVE_SUBJECT_API;
 
     return axios
       .get(url, {
@@ -109,25 +110,46 @@ const CourseList = () => {
       });
   };
 
-  const openDeleteModal = (course) => {
+  const openDetailModal = (item) => {
     createModal({
-      children: (
-        <CourseDeleteAlert handleDelete={handleDelete} course={course} />
-      ),
+      children: <CourseDetailAlert course={item} />,
     });
   };
 
-  const handleDelete = (course) => {
-    const id = course.id;
-    let url = `${process.env.REACT_APP_TEACHER_COURSE_API}${id}/`;
+  const joinCourse = (item) => {
+    const id = item.id;
+    let url = `${process.env.REACT_APP_STUDENT_ELECTIVE_SUBJECT_API}`;
+
+    let form = new FormData();
+    form.append("courseId", id);
 
     axios
-      .delete(url, {})
+      .post(url, form)
       .then((response) => {
-        return response.data;
+        enqueueSnackbar("加入成功", {
+          variant: "success",
+        });
+        getCourseList();
       })
-      .then((json) => {
-        enqueueSnackbar("删除成功", {
+      .catch((error) => {
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
+          variant: "error",
+        });
+      });
+  };
+  const unjoinCourse = (item) => {
+    const id = item.id;
+    let url = `${process.env.REACT_APP_STUDENT_ELECTIVE_SUBJECT_API}${id}/`;
+
+    axios
+      .delete(url)
+      .then((response) => {
+        enqueueSnackbar("退出成功", {
           variant: "success",
         });
         getCourseList();
@@ -147,7 +169,6 @@ const CourseList = () => {
   return (
     <Card>
       <Card.Header>
-        {/* <Container fluid="md"> */}
         <Row>
           <Col>课程列表</Col>
         </Row>
@@ -162,20 +183,9 @@ const CourseList = () => {
                 value={searchForm.course_name}
               />
             </Col>
-            <Col>
-              <Form.Control
-                placeholder="班级名称"
-                name="class_name"
-                onChange={handleChange}
-                value={searchForm.class_name}
-              />
-            </Col>
+
             <Col className="end">
-              <ButtonGroup>
-                <Link to="/course/create">
-                  <Button variant="info">创建</Button>
-                </Link>
-              </ButtonGroup>
+              <ButtonGroup></ButtonGroup>
             </Col>
           </Row>
         </SearchContainer>
@@ -190,8 +200,9 @@ const CourseList = () => {
               <th>教师</th>
               <th>必修/选修</th>
               <th>课程学分</th>
-              <th>班级/学生上限</th>
-              <th>选课限期</th>
+              <th>课程大纲</th>
+              <th>报名人数/上限</th>
+
               <th>操作</th>
             </tr>
           </thead>
@@ -200,35 +211,32 @@ const CourseList = () => {
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.title}</td>
-                <td>{item.teacher}</td>
+                <td>{item.teacher_name}</td>
                 <td>{item.is_compulsory ? "必修" : "选修"}</td>
                 <td>{item.credit}</td>
+                <td>{item.outline}</td>
                 <td>
-                  {item.is_compulsory
-                    ? item.class_info.name
-                    : `${item.student_limit}人`}
+                  {item.students.length}/{item.student_limit}
                 </td>
-                <td>
-                  {item.deadline
-                    ? // ? new Date(item.deadline).toISOString().slice(0, 10)
-                      // https://ououe.com/posts/2019/12/06/tolocalestring/
-                      new Date(item.deadline).toLocaleString("zh-CN", {
-                        dateStyle: "full",
-                        timeZone: "Asia/Shanghai",
-                      })
-                    : "-"}
-                </td>
+
                 <td>
                   <ButtonGroup>
-                    <Link to={`/course/edit/${item.id}`}>
-                      <Button variant="outline-primary">编辑</Button>
-                    </Link>
-                    <Button
-                      variant="outline-danger"
-                      onClick={() => openDeleteModal(item)}
-                    >
-                      刪除
-                    </Button>
+                    {!item.students.includes(userId) && (
+                      <Button
+                        variant="outline-primary"
+                        onClick={() => joinCourse(item)}
+                      >
+                        加入
+                      </Button>
+                    )}
+                    {item.students.includes(userId) && (
+                      <Button
+                        variant="outline-danger"
+                        onClick={() => unjoinCourse(item)}
+                      >
+                        退出
+                      </Button>
+                    )}
                   </ButtonGroup>
                 </td>
               </tr>

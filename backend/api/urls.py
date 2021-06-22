@@ -28,6 +28,7 @@ student_router.register(r"student", student_views.StudentViewSet)
 student_router.register(r"student-course", student_views.StudentCourseViewSet)
 student_router.register(r"course-schedule", student_views.CourseScheduleViewSet)
 student_router.register(r"course", student_views.CourseViewSet)
+student_router.register(r"elective_subject", student_views.ElectiveSubjectViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
