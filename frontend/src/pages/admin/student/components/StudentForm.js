@@ -32,37 +32,40 @@ export default function StudentForm({ type }) {
     setFormValues,
     errors,
     handleInputValue,
-    handleDateValue,
+
     handleFormSubmit,
     formIsValid,
   } = useFormControls();
 
-  useEffect(async () => {
-    const classes = await getClasses();
-    if (type === "edit") {
-      let student = await getStudent();
-      setFormValues({
-        ...formValues,
-        id,
-        full_name: student.user.full_name,
-        email: student.user.email,
-        sex: student.user.sex,
-        address: student.user.address,
-        phone: student.user.phone,
-        is_active: student.user.is_active,
-        code: student.code,
-        classId: student.class_info.id,
-        classes,
-        formType: "edit",
-      });
-    } else {
-      const classId = classes[0] ? classes[0].id : -1;
-      setFormValues({
-        ...formValues,
-        classes,
-        classId,
-      });
-    }
+  useEffect(() => {
+    const init = async () => {
+      const classes = await getClasses();
+      if (type === "edit") {
+        let student = await getStudent();
+        setFormValues({
+          ...formValues,
+          id,
+          full_name: student.user.full_name,
+          email: student.user.email,
+          sex: student.user.sex,
+          address: student.user.address,
+          phone: student.user.phone,
+          is_active: student.user.is_active,
+          code: student.code,
+          classId: student.class_info.id,
+          classes,
+          formType: "edit",
+        });
+      } else {
+        const classId = classes[0] ? classes[0].id : -1;
+        setFormValues({
+          ...formValues,
+          classes,
+          classId,
+        });
+      }
+    };
+    init();
   }, []);
 
   const handleSubmitAndReturnToListPage = (event) => {

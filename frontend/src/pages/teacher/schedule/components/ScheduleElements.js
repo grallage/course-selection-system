@@ -63,7 +63,7 @@ export const ClassNameSubText = styled.span`
   color: black;
 `;
 
-const _Btn = styled.button`
+const Btn = styled.button`
   border: none;
   width: 100%;
   height: 100%;
@@ -73,10 +73,10 @@ const _Btn = styled.button`
 `;
 
 export const AddBtn = styled(({ children, ...props }) => (
-  <_Btn {...props}>
+  <Btn {...props}>
     <AiOutlinePlus />
     {children}
-  </_Btn>
+  </Btn>
 ))`
   color: #5bbd2a;
   background-color: inherit;
@@ -84,10 +84,10 @@ export const AddBtn = styled(({ children, ...props }) => (
 `;
 
 export const DelBtn = styled(({ children, ...props }) => (
-  <_Btn {...props}>
+  <Btn {...props}>
     <AiFillDelete />
     {children}
-  </_Btn>
+  </Btn>
 ))`
   margin-top: auto;
   flex: 0 0 15px;

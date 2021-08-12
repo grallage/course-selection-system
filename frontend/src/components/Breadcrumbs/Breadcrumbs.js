@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumbs as MBreadcrumbs, Typography } from "@material-ui/core/";
 import { EmptyToolbar } from "../Toolbar/ToolbarElements";
-import {
-  useLocation,
-  useHistory,
-  BrowserRouter as Router,
-} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import pathName from "./data";
 
 import {
@@ -17,14 +13,13 @@ import { CommonLink } from "../commom/CommonElements";
 export default function Breadcrumbs() {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   let location = useLocation();
-  const history = useHistory();
 
   useEffect(() => {
     let pathList = location.pathname.split("/");
     let dataList = [];
 
     pathList.forEach((element, index) => {
-      if (element === "" && index != 0) {
+      if (element === "" && index !== 0) {
         return;
       }
       if (!pathName[element]) {
@@ -41,7 +36,7 @@ export default function Breadcrumbs() {
     });
 
     setBreadcrumbs(dataList);
-  }, [location.key]);
+  }, [location.key, location.pathname]);
 
   return (
     <BreadcrumbsContainer>

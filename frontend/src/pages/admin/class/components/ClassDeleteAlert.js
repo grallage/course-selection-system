@@ -9,7 +9,7 @@ import {
 import { useDialog } from "providers/DialogProvider";
 
 function ClassDeleteAlert({ classInfo, handleDelete }) {
-  const { createDialog, closeDialog } = useDialog();
+  const { closeDialog } = useDialog();
 
   const handleSubmit = () => {
     handleDelete(classInfo);

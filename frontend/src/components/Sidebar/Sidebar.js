@@ -1,9 +1,8 @@
 import React from "react";
-import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+import { useTheme } from "@material-ui/core/styles";
 
 import List from "@material-ui/core/List";
-
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 
@@ -17,13 +16,11 @@ import Icon from "@material-ui/core/Icon";
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import { Hidden as hiddenSidebar } from "../../redux/actions/sidebarAction";
-import { SidebarLink, SidebarWrapper } from "./SidebarElements";
+import { SidebarWrapper } from "./SidebarElements";
 
 import { teacherLinks, studentLinks, admininks } from "./data";
 import { EmptyToolbar } from "../Toolbar/ToolbarElements";
 import { CommonLink } from "../commom/CommonElements";
-
-const drawerWidth = 240;
 
 export default function Sidebar() {
   const sidebar = useSelector((state) => state.sidebar);

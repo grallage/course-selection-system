@@ -4,15 +4,7 @@ import { useSnackbar } from "notistack";
 // import { useLocation } from "react-router-dom";
 import { useModal } from "providers/DialogBootstrapProvider";
 
-import {
-  Table,
-  Container,
-  Row,
-  Col,
-  Form,
-  ButtonGroup,
-  Button,
-} from "react-bootstrap";
+import { Table, Row, Col, Form, ButtonGroup, Button } from "react-bootstrap";
 import {
   Card,
   SearchContainer,
@@ -64,7 +56,7 @@ const CourseList = () => {
   }, [searchForm, page]);
 
   const handleChange = (event) => {
-    const { name, value, checked } = event.target;
+    const { name, value } = event.target;
     setPage(1);
     setSearchForm({ [name]: value });
   };

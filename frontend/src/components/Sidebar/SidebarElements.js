@@ -1,6 +1,5 @@
 import Drawer from "@material-ui/core/Drawer";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 

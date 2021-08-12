@@ -51,7 +51,7 @@ export const useFormControls = () => {
   const history = useHistory();
   const [formValues, setFormValues] = React.useState(initialFormValues);
   const [errors, setErrors] = React.useState({});
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const validate = (fieldValues = formValues) => {
     let tempErrors = { ...errors };
@@ -73,7 +73,7 @@ export const useFormControls = () => {
   };
 
   const handleInputValue = (e) => {
-    const { name, value, checked } = e.target;
+    const { name, value } = e.target;
     const nameValue = value;
     setFormValues({
       ...formValues,
@@ -125,7 +125,8 @@ export const useFormControls = () => {
 
     if (response && response.data && response.data.user) {
       const msgList = Object.values(response.data.user);
-      msgList.map((msg) => {
+      // msgList.map((msg) => {
+      msgList.forEach((msg) => {
         enqueueSnackbar(msg, {
           variant: "error",
         });

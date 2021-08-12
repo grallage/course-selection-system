@@ -31,27 +31,30 @@ const ScheduleAdd = ({ type }) => {
   const {
     formValues,
     setFormValues,
-    errors,
-    handleInputValue,
+    // errors,
+    // handleInputValue,
     handleCourseValue,
     handleFormSubmit,
     formIsValid,
-    handleDeadlineValue,
+    // handleDeadlineValue,
   } = useFormControls();
 
-  useEffect(async () => {
-    console.log(week, timespan);
-    setFormValues({
-      ...formValues,
-      week: week[0],
-      time_span: timespan[0],
-    });
+  useEffect(() => {
+    const init = async () => {
+      console.log(week, timespan);
+      setFormValues({
+        ...formValues,
+        week: week[0],
+        time_span: timespan[0],
+      });
 
-    const courseList = (await getCourseList()).map((item) => {
-      return createCourseData(item);
-    });
-    console.log(courseList);
-    setCourses(courseList);
+      const courseList = (await getCourseList()).map((item) => {
+        return createCourseData(item);
+      });
+      console.log(courseList);
+      setCourses(courseList);
+    };
+    init();
   }, []);
 
   const getCourseList = async (event) => {

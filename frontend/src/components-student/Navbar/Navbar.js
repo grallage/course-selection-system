@@ -7,14 +7,12 @@ import { useHistory } from "react-router";
 
 // components
 import { Nav } from "react-bootstrap";
-import { NavbarContainer, NavbarMenu } from "./NavbarElements";
+import { NavbarContainer } from "./NavbarElements";
 
 import { RemoveUser } from "../../redux/actions/userAction";
-import { NavDropdown } from "react-bootstrap";
 
 const Navbar = () => {
   const history = useHistory();
-
   const studentName = useSelector((state) => state.user.user.full_name);
   const dispatch = useDispatch();
 

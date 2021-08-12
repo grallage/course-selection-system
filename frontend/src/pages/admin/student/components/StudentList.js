@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import axios from "service/axiosConfig";
 
 import { useSnackbar } from "notistack";
-import { useLocation } from "react-router-dom";
+
 // import queryString from "query-string";
 
 import Link from "@material-ui/core/Link";
@@ -69,7 +69,7 @@ const StudentList = () => {
   }, [searchForm]);
 
   const handleChange = (event) => {
-    const { name, value, checked } = event.target;
+    const { name, value } = event.target;
     setSearchForm({ [name]: value });
   };
 

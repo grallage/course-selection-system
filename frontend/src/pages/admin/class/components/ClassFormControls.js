@@ -49,7 +49,7 @@ const PostForm = async (values, successCallback, errorCallback) => {
 export const useFormControls = () => {
   const [formValues, setFormValues] = React.useState(initialFormValues);
   const [errors, setErrors] = React.useState({});
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const validate = (fieldValues = formValues) => {
     let tempErrors = { ...errors };
@@ -68,7 +68,7 @@ export const useFormControls = () => {
   };
 
   const handleInputValue = (e) => {
-    let { name, value, checked } = e.target;
+    let { name, value } = e.target;
 
     if (name === "classCount" && value) {
       value = Math.min(Math.max(value, 1), 10);

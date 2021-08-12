@@ -34,25 +34,28 @@ const PersonalInfoForm = () => {
   const {
     formValues,
     setFormValues,
-    errors,
+
     handleInputValue,
     handleFormSubmit,
     formIsValid,
   } = useFormControls();
 
-  useEffect(async () => {
-    const data = createData(await getTeacherInfo());
-    setTeacher(data);
-    setFormValues({
-      ...formValues,
-      id: data.id,
-      domain: data.domain,
-      office: data.office,
-      address: data.address,
-      phone: data.phone,
-    });
-    dispatch(UpdateUser(data));
-    setIsLoading(false);
+  useEffect(() => {
+    const init = async () => {
+      const data = createData(await getTeacherInfo());
+      setTeacher(data);
+      setFormValues({
+        ...formValues,
+        id: data.id,
+        domain: data.domain,
+        office: data.office,
+        address: data.address,
+        phone: data.phone,
+      });
+      dispatch(UpdateUser(data));
+      setIsLoading(false);
+    };
+    init();
   }, []);
 
   const getTeacherInfo = async () => {

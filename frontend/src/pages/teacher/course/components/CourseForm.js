@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Card, DatePicker } from "components-teacher/common/CommonElements";
 import { Button, Form, Col, Row } from "react-bootstrap";
@@ -31,60 +31,63 @@ const CourseForm = ({ type }) => {
     errors,
     handleInputValue,
     handleClassesValue,
-    handleDateValue,
+
     handleFormSubmit,
     formIsValid,
     handleDeadlineValue,
   } = useFormControls();
 
-  useEffect(async () => {
-    const classes = await getClasses();
-    const all_classes = classes.map((item) => {
-      return createData(item);
-    });
-
-    // console.log(all_classes);
-
-    if (type === "edit") {
-      let {
-        title,
-        is_compulsory,
-        credit,
-        student_limit,
-        deadline,
-        endtime,
-        outline,
-        evaluation_standard,
-        book,
-        class_info,
-      } = await getCourse();
-      setClassInfo(class_info);
-
-      setOriginalDeadline(new Date(deadline));
-
-      setFormValues({
-        ...formValues,
-        formType: "edit",
-        all_classes: all_classes,
-        id,
-        title,
-        is_compulsory,
-        credit,
-        student_limit,
-        deadline: new Date(deadline),
-
-        outline,
-        evaluation_standard,
-        book,
+  useEffect(() => {
+    const init = async () => {
+      const classes = await getClasses();
+      const all_classes = classes.map((item) => {
+        return createData(item);
       });
 
-      setIsLoading(false);
-    } else {
-      setFormValues({
-        ...formValues,
-        all_classes: all_classes,
-      });
-    }
+      // console.log(all_classes);
+
+      if (type === "edit") {
+        let {
+          title,
+          is_compulsory,
+          credit,
+          student_limit,
+          deadline,
+          // endtime,
+          outline,
+          evaluation_standard,
+          book,
+          class_info,
+        } = await getCourse();
+        setClassInfo(class_info);
+
+        setOriginalDeadline(new Date(deadline));
+
+        setFormValues({
+          ...formValues,
+          formType: "edit",
+          all_classes: all_classes,
+          id,
+          title,
+          is_compulsory,
+          credit,
+          student_limit,
+          deadline: new Date(deadline),
+
+          outline,
+          evaluation_standard,
+          book,
+        });
+
+        setIsLoading(false);
+      } else {
+        setFormValues({
+          ...formValues,
+          all_classes: all_classes,
+        });
+      }
+    };
+    init();
   }, []);
 
   const getCourse = async () => {

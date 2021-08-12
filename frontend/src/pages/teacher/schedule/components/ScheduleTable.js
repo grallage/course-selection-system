@@ -2,24 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Switch from "react-switch";
 import { useModal } from "providers/DialogBootstrapProvider";
 import ScheduleDeleteAlert from "./ScheduleDeleteAlert";
 
-import {
-  Table,
-  Container,
-  Row,
-  Col,
-  Form,
-  ButtonGroup,
-  Button,
-} from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import {
   Card,
   SearchContainer,
-  Link,
 } from "components-teacher/common/CommonElements";
 
 import {
@@ -73,15 +64,18 @@ const ScheduleTable = () => {
     });
   };
 
-  useEffect(async () => {
-    getScheduleSettings();
+  useEffect(() => {
+    const init = async () => {
+      getScheduleSettings();
 
-    const courseScheduleList = (await getCourseScheduleList()).map((item) => {
-      return createCourseData(item);
-    });
+      const courseScheduleList = (await getCourseScheduleList()).map((item) => {
+        return createCourseData(item);
+      });
 
-    setCourseSchedules(courseScheduleList);
-    setIsLoading(false);
+      setCourseSchedules(courseScheduleList);
+      setIsLoading(false);
+    };
+    init();
   }, [refleshPage]);
 
   const getCourseSchedule = (week, timespan) => {

@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import history from "./service/history";
-import { makeStyles } from "@material-ui/core/styles";
 
 import { MainContainer } from "./components/commom/CommonElements";
 // import Notification from "./components/Notification/Notification";
@@ -52,14 +51,7 @@ import studentJoinCoursePage from "./pages/student/join-course/JoinCoursePage";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-}));
-
 function App() {
-  const classes = useStyles();
   const isTeacher = useSelector((state) =>
     state.user.user ? state.user.user.is_teacher : false
   );

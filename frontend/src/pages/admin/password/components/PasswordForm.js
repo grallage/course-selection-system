@@ -11,7 +11,6 @@ export default function PasswordForm() {
     setFormValues,
     errors,
     handleInputValue,
-    handleDateValue,
     handleFormSubmit,
     formIsValid,
   } = useFormControls();

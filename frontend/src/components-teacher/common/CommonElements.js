@@ -10,8 +10,6 @@ import {
 import DatePickerR from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const DEFAULT_WIDTH = "250px";
-
 export const Main = styled.main`
   flex-grow: 1;
   min-height: 100vh;

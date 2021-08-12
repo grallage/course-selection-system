@@ -29,24 +29,27 @@ export default function MajorForm({ type }) {
     formIsValid,
   } = useFormControls();
 
-  useEffect(async () => {
-    if (type === "edit") {
-      let { name, description, is_active } = await getMajor();
-      setFormValues({
-        ...formValues,
-        formType: "edit",
-        id,
-        name,
-        description,
-        is_active,
-        token,
-      });
-    } else {
-      setFormValues({
-        ...formValues,
-        token,
-      });
-    }
+  useEffect(() => {
+    const init = async () => {
+      if (type === "edit") {
+        let { name, description, is_active } = await getMajor();
+        setFormValues({
+          ...formValues,
+          formType: "edit",
+          id,
+          name,
+          description,
+          is_active,
+          token,
+        });
+      } else {
+        setFormValues({
+          ...formValues,
+          token,
+        });
+      }
+    };
+    init();
   }, []);
 
   const handleSubmitAndReturnToListPage = (event) => {

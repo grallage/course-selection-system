@@ -44,14 +44,14 @@ const initialSearchForm = {
 
 const TeacherList = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
   const [searchForm, setSearchForm] = React.useState(initialSearchForm);
 
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
   const [count, setCount] = React.useState(0);
   const [teachers, setTeachers] = React.useState([]);
-  const location = useLocation();
+
   const { createDialog } = useDialog();
 
   const handleChangeRowsPerPage = (event) => {
@@ -59,16 +59,12 @@ const TeacherList = () => {
     setPage(0);
   };
 
-  // useEffect(() => {
-  //   const parsed = queryString.parse(location.search);
-  // }, []);
-
   useEffect(() => {
     getTeacherList();
   }, [searchForm, page, pageSize]);
 
   const handleChange = (event) => {
-    const { name, value, checked } = event.target;
+    const { name, value } = event.target;
     setSearchForm({ [name]: value });
   };
 

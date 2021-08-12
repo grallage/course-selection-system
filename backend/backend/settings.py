@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-_hu2s=9bbh^ya14(su0b^$8p=crb=va^3&76su2mw$d3l6x2^u"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -145,7 +145,7 @@ REST_FRAMEWORK = {
     # page
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "DEFAULT_PAGINATION_CLASS": "api.pagination.PageNumberWithPageSizePagination",
-    "PAGE_SIZE": 3,
+    "PAGE_SIZE": 10,
     # filters
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }

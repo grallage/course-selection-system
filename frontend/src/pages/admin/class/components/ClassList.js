@@ -57,10 +57,47 @@ const ClassList = () => {
     setPage(0);
   };
 
+  const getClassList = (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    let url = process.env.REACT_APP_CLASS_API;
+
+    return axios
+      .get(url, {
+        params: {
+          name: name,
+          major_name: majorName,
+          page: page + 1,
+          page_size: pageSize,
+          ordering: "-id",
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .then((json) => {
+        setCount(json.count);
+        const data = json.results.map((item) => createData(item));
+        setClassList(data);
+      })
+      .catch((error) => {
+        let msg = "操作失败";
+        const response = error.response;
+        if (response && response.data && response.data.detail) {
+          msg = response.data.detail;
+        }
+        enqueueSnackbar(msg, {
+          variant: "error",
+        });
+      });
+  };
+
   useEffect(() => {
     const parsed = queryString.parse(location.search);
     setName(parsed.name ? String(parsed.name) : "");
-  }, []);
+  }, [location.search]);
 
   useEffect(() => {
     getClassList();
@@ -97,43 +134,6 @@ const ClassList = () => {
           variant: "success",
         });
         getClassList();
-      })
-      .catch((error) => {
-        let msg = "操作失败";
-        const response = error.response;
-        if (response && response.data && response.data.detail) {
-          msg = response.data.detail;
-        }
-        enqueueSnackbar(msg, {
-          variant: "error",
-        });
-      });
-  };
-
-  const getClassList = (event) => {
-    if (event) {
-      event.preventDefault();
-    }
-
-    let url = process.env.REACT_APP_CLASS_API;
-
-    return axios
-      .get(url, {
-        params: {
-          name: name,
-          major_name: majorName,
-          page: page + 1,
-          page_size: pageSize,
-          ordering: "-id",
-        },
-      })
-      .then((response) => {
-        return response.data;
-      })
-      .then((json) => {
-        setCount(json.count);
-        const data = json.results.map((item) => createData(item));
-        setClassList(data);
       })
       .catch((error) => {
         let msg = "操作失败";

@@ -39,13 +39,16 @@ const ScheduleTable = () => {
   // const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(async () => {
-    getScheduleSettings();
-    const courseScheduleList = (await getCourseScheduleList()).map((item) => {
-      return createCourseData(item);
-    });
-    setCourseSchedules(courseScheduleList);
-    setIsLoading(false);
+  useEffect(() => {
+    const init = async () => {
+      getScheduleSettings();
+      const courseScheduleList = (await getCourseScheduleList()).map((item) => {
+        return createCourseData(item);
+      });
+      setCourseSchedules(courseScheduleList);
+      setIsLoading(false);
+    };
+    init();
   }, [refleshPage]);
 
   const getCourseSchedule = (week, timespan) => {

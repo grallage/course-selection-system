@@ -6,10 +6,6 @@ import { Button, Form } from "react-bootstrap";
 
 import { useFormControls } from "./PasswordFormControls";
 
-function createData(item) {
-  return { value: item.id, label: item.name };
-}
-
 const PasswordForm = () => {
   const user = useSelector((state) => state.user.user);
   const token = useSelector((state) => state.user.token);
@@ -19,12 +15,12 @@ const PasswordForm = () => {
     setFormValues,
     errors,
     handleInputValue,
-    handleDateValue,
+
     handleFormSubmit,
     formIsValid,
   } = useFormControls();
 
-  useEffect(async () => {
+  useEffect(() => {
     setFormValues({
       ...formValues,
       id: user.id,

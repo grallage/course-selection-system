@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Card, ListGroup } from "react-bootstrap";
+import React from "react";
+
 import { Link } from "../common/CommonElements";
 import {
   SidebarContainer,
@@ -14,10 +14,7 @@ import { BiAtom } from "react-icons/bi";
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Show as showSidebar,
-  Hidden as hiddenSidebar,
-} from "../../redux/actions/sidebarAction";
+import { Hidden as hiddenSidebar } from "../../redux/actions/sidebarAction";
 
 // data
 import { teacherLinks } from "./data";

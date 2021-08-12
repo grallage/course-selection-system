@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UpdateUser } from "../../../../redux/actions/userAction";
 
 import { Card } from "components-teacher/common/CommonElements";
-import { Button, Form, Col, Row } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 
 import { useFormControls } from "./PersonalInfoFormControls";
 
@@ -33,23 +33,26 @@ const PersonalInfoForm = () => {
   const {
     formValues,
     setFormValues,
-    errors,
+
     handleInputValue,
     handleFormSubmit,
     formIsValid,
   } = useFormControls();
 
-  useEffect(async () => {
-    const data = createData(await getTeacherInfo());
-    setTeacher(data);
-    setFormValues({
-      ...formValues,
-      id: data.id,
-      address: data.address,
-      phone: data.phone,
-    });
-    dispatch(UpdateUser(data));
-    setIsLoading(false);
+  useEffect(() => {
+    const init = async () => {
+      const data = createData(await getTeacherInfo());
+      setTeacher(data);
+      setFormValues({
+        ...formValues,
+        id: data.id,
+        address: data.address,
+        phone: data.phone,
+      });
+      dispatch(UpdateUser(data));
+      setIsLoading(false);
+    };
+    init();
   }, []);
 
   const getTeacherInfo = async () => {

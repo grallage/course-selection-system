@@ -52,7 +52,7 @@ const CourseList = () => {
   const [pageSize, setPageSize] = React.useState(10);
   const [count, setCount] = React.useState(0);
   const { enqueueSnackbar } = useSnackbar();
-  const location = useLocation();
+
   const { createModal } = useModal();
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const CourseList = () => {
   }, [searchForm, page]);
 
   const handleChange = (event) => {
-    const { name, value, checked } = event.target;
+    const { name, value } = event.target;
     setPage(1);
     setSearchForm({ [name]: value });
   };

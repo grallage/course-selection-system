@@ -31,14 +31,17 @@ export default function ClassForm() {
     formIsValid,
   } = useFormControls();
 
-  useEffect(async () => {
-    const majors = await getMajors();
-    const majorId = majors[0] ? majors[0].id : -1;
-    setFormValues({
-      ...formValues,
-      majors,
-      majorId,
-    });
+  useEffect(() => {
+    const init = async () => {
+      const majors = await getMajors();
+      const majorId = majors[0] ? majors[0].id : -1;
+      setFormValues({
+        ...formValues,
+        majors,
+        majorId,
+      });
+    };
+    init();
   }, []);
 
   const handleSubmitAndReturnToListPage = (event) => {

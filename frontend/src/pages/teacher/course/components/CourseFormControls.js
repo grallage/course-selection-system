@@ -68,7 +68,7 @@ const PostForm = async (values, successCallback, errorCallback) => {
 export const useFormControls = () => {
   const [formValues, setFormValues] = React.useState(initialFormValues);
   const [errors, setErrors] = React.useState({});
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const validate = (fieldValues = formValues) => {
     let tempErrors = { ...errors };
@@ -122,7 +122,7 @@ export const useFormControls = () => {
   };
 
   const handleInputValue = (e) => {
-    const { name, value, checked } = e.target;
+    const { name, value } = e.target;
     const nameValue =
       name === "is_compulsory" ? (value === "true" ? true : false) : value;
     // const nameValue = value;
@@ -187,7 +187,8 @@ export const useFormControls = () => {
 
     if (response && response.data && response.data.user) {
       const msgList = Object.values(response.data.user);
-      msgList.map((msg) => {
+      // msgList.map((msg) => {
+      msgList.forEach((msg) => {
         enqueueSnackbar(msg, {
           variant: "error",
         });

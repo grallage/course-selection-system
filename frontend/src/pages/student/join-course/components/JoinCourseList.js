@@ -1,19 +1,11 @@
 import React, { useEffect } from "react";
 import axios from "service/axiosConfig";
 import { useSnackbar } from "notistack";
-import { useLocation } from "react-router-dom";
+
 import { useModal } from "providers/DialogBootstrapProvider";
 import { useSelector } from "react-redux";
 
-import {
-  Table,
-  Container,
-  Row,
-  Col,
-  Form,
-  ButtonGroup,
-  Button,
-} from "react-bootstrap";
+import { Table, Row, Col, Form, ButtonGroup, Button } from "react-bootstrap";
 import {
   Card,
   SearchContainer,
@@ -37,7 +29,7 @@ function createData(item) {
     is_compulsory: item.is_compulsory,
     outline: item.outline,
     student_limit: item.student_limit,
-    deadline: item.deadline,
+
     // students_count: item.students.length,
     students: item.students,
     // has_join: item.students,
@@ -65,7 +57,7 @@ const CourseList = () => {
   }, [searchForm, page]);
 
   const handleChange = (event) => {
-    const { name, value, checked } = event.target;
+    const { name, value } = event.target;
     setPage(1);
     setSearchForm({ [name]: value });
   };
@@ -110,11 +102,11 @@ const CourseList = () => {
       });
   };
 
-  const openDetailModal = (item) => {
-    createModal({
-      children: <CourseDetailAlert course={item} />,
-    });
-  };
+  // const openDetailModal = (item) => {
+  //   createModal({
+  //     children: <CourseDetailAlert course={item} />,
+  //   });
+  // };
 
   const joinCourse = (item) => {
     const id = item.id;
