@@ -154,8 +154,9 @@ REST_FRAMEWORK = {
 CORS_ALLOW_CREDENTIALS = True
 # CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3002",
-    "http://localhost:3002",
+    # "http://127.0.0.1:3002",
+    # "http://localhost:3002",
+    "https://distracted-brown-dda756.netlify.app/",
 ]
 
 DJOSER = {"SERIALIZERS": {"user": "api.serializers.serializers.UserSerializer"}}
