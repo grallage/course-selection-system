@@ -110,6 +110,9 @@ function App() {
           </StudentMainContainer>
         </>
       )}
+      {!isStudent && !isTeacher && !isAdmin && (
+        <Route exact path="/" component={signin} />
+      )}
     </>
   );
 
