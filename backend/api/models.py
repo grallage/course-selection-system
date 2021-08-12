@@ -11,18 +11,59 @@ from .utils import (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, name, password=None):
+    def create_user(
+        self,
+        email,
+        full_name,
+        sex,
+        address,
+        phone,
+        is_student,
+        is_teacher,
+        is_admin,
+        password=None,
+    ):
         if not email:
             raise ValueError(_("用户需要设置电子邮箱地址"))
-        user = self.model(email=self.normalize_email(email), name=name)
+        user = self.model(
+            email=self.normalize_email(email),
+            full_name=full_name,
+            sex=sex,
+            address=address,
+            phone=phone,
+            is_student=is_student,
+            is_teacher=is_teacher,
+            is_admin=is_admin,
+        )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, name, password=None):
+    def create_superuser(
+        self,
+        email,
+        full_name,
+        sex,
+        address,
+        phone,
+        is_student,
+        is_teacher,
+        is_admin,
+        password=None,
+    ):
         if not email:
             raise ValueError(_("用户需要设置电子邮箱地址"))
-        user = self.create_user(email, name, password)
+        user = self.create_user(
+            email,
+            full_name,
+            sex,
+            address,
+            phone,
+            is_student,
+            is_teacher,
+            is_admin,
+            password,
+        )
         user.is_active = True
         user.save(using=self._db)
         return user

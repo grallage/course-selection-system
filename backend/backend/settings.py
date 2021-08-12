@@ -127,6 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = "/home/Lynn2021/course-selection-system/backend/static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -156,7 +157,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     # "http://127.0.0.1:3002",
     # "http://localhost:3002",
-    "https://distracted-brown-dda756.netlify.app/",
+    "https://distracted-brown-dda756.netlify.app",
 ]
 
 DJOSER = {"SERIALIZERS": {"user": "api.serializers.serializers.UserSerializer"}}
